@@ -1,26 +1,24 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ServiceProxy, IWeatherForecast } from '../shared/service-proxies/service-proxies'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [ServiceProxy]
 })
-export class AppComponent {
-  public forecasts?: WeatherForecast[];
+export class AppComponent implements OnInit {
+  forecasts?: IWeatherForecast[];
 
-  constructor(http: HttpClient) {
-    http.get<WeatherForecast[]>('/weatherforecast').subscribe(result => {
-      this.forecasts = result;
-    }, error => console.error(error));
-  }
-
-  title = 'WebStoreFrontend';
+  constructor(private weatherService: ServiceProxy) {
 }
-
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
+  ngOnInit(): void {
+    this.getForecasts();
+  }
+  getForecasts() {
+    this.weatherService.getWeatherForecast().subscribe((result) => {
+      this.forecasts = result;
+    });
+  }
 }
