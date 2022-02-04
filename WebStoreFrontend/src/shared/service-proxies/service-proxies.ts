@@ -90,6 +90,7 @@ export class WeatherForecast implements IWeatherForecast {
     temperatureC?: number;
     readonly temperatureF?: number;
     summary?: string | undefined;
+    extraString?: string | undefined;
 
     constructor(data?: IWeatherForecast) {
         if (data) {
@@ -106,6 +107,7 @@ export class WeatherForecast implements IWeatherForecast {
             this.temperatureC = _data["temperatureC"];
             (<any>this).temperatureF = _data["temperatureF"];
             this.summary = _data["summary"];
+            this.extraString = _data["extraString"];
         }
     }
 
@@ -122,6 +124,7 @@ export class WeatherForecast implements IWeatherForecast {
         data["temperatureC"] = this.temperatureC;
         data["temperatureF"] = this.temperatureF;
         data["summary"] = this.summary;
+        data["extraString"] = this.extraString;
         return data;
     }
 }
@@ -131,6 +134,7 @@ export interface IWeatherForecast {
     temperatureC?: number;
     temperatureF?: number;
     summary?: string | undefined;
+    extraString?: string | undefined;
 }
 
 export class ApiException extends Error {
