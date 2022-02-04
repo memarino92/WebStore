@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebStoreAPI.Controllers
@@ -13,21 +14,19 @@ namespace WebStoreAPI.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly WebStoreContext _webStoreContext;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, WebStoreContext context)
         {
             _logger = logger;
+            _webStoreContext = context;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public  IEnumerable<WeatherForecast> Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var result =  _webStoreContext.WeatherForecasts.Where(x => x.WeatherForecastId > 0);
+            return result;
         }
     }
 }

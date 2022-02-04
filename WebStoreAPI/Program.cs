@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using WebStoreAPI;
+
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +17,12 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+// Add EF Core config
+builder.Services.AddDbContext<WebStoreContext>(
+    options => options.UseSqlServer("Server=localhost;User ID=sa;Password=Pass@word1;"));
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

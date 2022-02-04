@@ -2,6 +2,7 @@ namespace WebStoreAPI
 {
     public class WeatherForecast
     {
+        public int WeatherForecastId { get; set; }
         public DateTime Date { get; set; }
 
         public int TemperatureC { get; set; }
