@@ -1,0 +1,6 @@
+#Ignore auto-generated service proxies
+/src/shared/service-proxies/*
+
+#Ignore npm files
+package-lock.json
+package.json
