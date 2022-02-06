@@ -1,0 +1,12 @@
+# Nswag auto-generated service proxies
+/src/shared/service-proxies/*
+
+# Npm files
+package-lock.json
+package.json
+
+# Workspace config files
+/.vscode/*
+
+# ASP.NET config
+aspnetcore-https.js

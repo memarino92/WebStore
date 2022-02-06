@@ -1,24 +1,26 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ServiceProxy, IWeatherForecast } from '../shared/service-proxies/service-proxies'
+import { HttpClient } from '@angular/common/http'
+import { Component, OnInit } from '@angular/core'
+import {
+  ServiceProxy,
+  IWeatherForecast,
+} from '../shared/service-proxies/service-proxies'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ServiceProxy]
+  providers: [ServiceProxy],
 })
 export class AppComponent implements OnInit {
-  forecasts?: IWeatherForecast[];
+  forecasts?: IWeatherForecast[]
 
-  constructor(private weatherService: ServiceProxy) {
-}
+  constructor(private weatherService: ServiceProxy) {}
   ngOnInit(): void {
-    this.getForecasts();
+    this.getForecasts()
   }
   getForecasts() {
     this.weatherService.getWeatherForecast().subscribe((result) => {
-      this.forecasts = result;
-    });
+      this.forecasts = result
+    })
   }
 }
