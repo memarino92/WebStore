@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   }
   getForecasts() {
     this.weatherService.getWeatherForecast().subscribe((result) => {
-      this.forecasts = result
+      this.forecasts = result.flatMap((i) => [i, i, i, i, i, i, i, i, i, i])
     })
   }
 }
