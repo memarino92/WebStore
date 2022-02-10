@@ -1,9 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
-import {
-  ServiceProxy,
-  IWeatherForecast,
-} from '../shared/service-proxies/service-proxies'
+import { ServiceProxy, Book } from '../shared/service-proxies/service-proxies'
 
 @Component({
   selector: 'app-root',
@@ -12,15 +9,15 @@ import {
   providers: [ServiceProxy],
 })
 export class AppComponent implements OnInit {
-  forecasts?: IWeatherForecast[]
+  books?: Book[]
 
-  constructor(private weatherService: ServiceProxy) {}
+  constructor(private bookService: ServiceProxy) {}
   ngOnInit(): void {
-    this.getForecasts()
+    this.getBooks()
   }
-  getForecasts() {
-    this.weatherService.getWeatherForecast().subscribe((result) => {
-      this.forecasts = result.flatMap((i) => [i, i, i, i, i, i, i, i, i, i])
+  getBooks() {
+    this.bookService.books().subscribe((result) => {
+      this.books = result.flatMap((i) => [i, i, i, i, i, i, i, i, i, i])
     })
   }
 }
