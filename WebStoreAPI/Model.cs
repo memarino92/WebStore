@@ -5,7 +5,7 @@ namespace WebStoreAPI
 {
     public class WebStoreContext : DbContext
     {
-        public DbSet<WeatherForecast> WeatherForecasts { get; set; }
+        public DbSet<Book> Book { get; set; }
 
         public string DbPath { get; }
 
