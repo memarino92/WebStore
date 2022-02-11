@@ -20,4 +20,8 @@ export class AppComponent implements OnInit {
       this.books = result.flatMap((i) => [i, i, i, i, i, i, i, i, i, i])
     })
   }
+
+  getYear() {
+    return new Date().getFullYear()
+  }
 }
