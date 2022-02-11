@@ -151,23 +151,23 @@
       <div class="carousel-inner h-80">
         <div class="carousel-item active h-80">
           <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp"
+            src="https://res.cloudinary.com/mmarino/image/upload/v1644598278/bookshelves_bmucts.jpg"
             class="d-block w-100"
-            alt="Wild Landscape"
+            alt="Messy shelves at bookstore"
           />
         </div>
         <div class="carousel-item h-80">
           <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp"
+            src="https://res.cloudinary.com/mmarino/image/upload/v1644598508/bootstore_wpg3av.jpg"
             class="d-block w-100"
-            alt="Camera"
+            alt="Customer looking at shelves"
           />
         </div>
         <div class="carousel-item h-80">
           <img
-            src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp"
+            src="https://res.cloudinary.com/mmarino/image/upload/v1644598562/counter_at_bookstore_mhfoxb.jpg"
             class="d-block w-100"
-            alt="Exotic Fruits"
+            alt="Coutner of bookstore"
           />
         </div>
       </div>
@@ -206,7 +206,7 @@
         <div class="mask group" style="background-color: rgba(0, 0, 0, 0.6)">
           <div class="d-flex justify-content-center align-items-center h-100">
             <p
-              class="text-2xl font-bold text-white group-hover:text-3xl group-hover:text-gray-300"
+              class="text-2xl font-bold text-white transition-all group-hover:text-3xl group-hover:text-gray-300"
             >
               Fiction
             </p>
@@ -226,7 +226,7 @@
         <div class="mask" style="background-color: rgba(0, 0, 0, 0.6)">
           <div class="d-flex justify-content-center align-items-center h-100">
             <p
-              class="text-2xl font-bold text-white group-hover:text-3xl group-hover:text-gray-300"
+              class="text-2xl font-bold text-white transition-all group-hover:text-3xl group-hover:text-gray-300"
             >
               Non-Fiction
             </p>
@@ -244,11 +244,13 @@
     <div class="flex w-full flex-wrap items-center justify-center p-20">
       <ng-container *ngFor="let book of books">
         <div class="card m-8 h-80 w-60">
-          <img
-            src="{{ book.imageUrl }}"
-            class="card-img-top h-40"
-            alt="Hollywood Sign on The Hill"
-          />
+          <div class="flex h-40 w-full items-center justify-center">
+            <img
+              src="{{ book.imageUrl }}"
+              class="h-40 object-scale-down"
+              alt="Hollywood Sign on The Hill"
+            />
+          </div>
           <div class="card-body">
             <h5 class="card-title">{{ book.title }}</h5>
             <h5 class="card-title">By {{ book.author }}</h5>

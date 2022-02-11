@@ -17,11 +17,21 @@ export class AppComponent implements OnInit {
   }
   getBooks() {
     this.bookService.books().subscribe((result) => {
-      this.books = result.flatMap((i) => [i, i, i, i, i, i, i, i, i, i])
+      this.books = shuffleArray(result)
     })
   }
 
   getYear() {
     return new Date().getFullYear()
   }
+}
+
+function shuffleArray(array: any[]): any[] {
+  let newArray = [...array]
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[newArray[i], newArray[j]] = [newArray[j], newArray[i]]
+  }
+
+  return newArray
 }
