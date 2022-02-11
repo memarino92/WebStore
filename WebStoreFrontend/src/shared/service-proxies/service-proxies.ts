@@ -88,10 +88,11 @@ export class ServiceProxy {
 export class Book implements IBook {
     bookId?: number;
     createdAt?: Date;
-    name?: string | undefined;
+    title?: string | undefined;
     author?: string | undefined;
     imageUrl?: string | undefined;
     summary?: string | undefined;
+    price?: number | undefined;
 
     constructor(data?: IBook) {
         if (data) {
@@ -106,10 +107,11 @@ export class Book implements IBook {
         if (_data) {
             this.bookId = _data["bookId"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
-            this.name = _data["name"];
+            this.title = _data["title"];
             this.author = _data["author"];
             this.imageUrl = _data["imageUrl"];
             this.summary = _data["summary"];
+            this.price = _data["price"];
         }
     }
 
@@ -124,10 +126,11 @@ export class Book implements IBook {
         data = typeof data === 'object' ? data : {};
         data["bookId"] = this.bookId;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
-        data["name"] = this.name;
+        data["title"] = this.title;
         data["author"] = this.author;
         data["imageUrl"] = this.imageUrl;
         data["summary"] = this.summary;
+        data["price"] = this.price;
         return data;
     }
 }
@@ -135,10 +138,11 @@ export class Book implements IBook {
 export interface IBook {
     bookId?: number;
     createdAt?: Date;
-    name?: string | undefined;
+    title?: string | undefined;
     author?: string | undefined;
     imageUrl?: string | undefined;
     summary?: string | undefined;
+    price?: number | undefined;
 }
 
 export class ApiException extends Error {
