@@ -29,8 +29,8 @@ export class ServiceProxy {
     /**
      * @return Success
      */
-    getWeatherForecast(): Observable<WeatherForecast[]> {
-        let url_ = this.baseUrl + "/WeatherForecast";
+    books(): Observable<Book[]> {
+        let url_ = this.baseUrl + "/Book";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -42,20 +42,20 @@ export class ServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetWeatherForecast(response_);
+            return this.processBooks(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetWeatherForecast(response_ as any);
+                    return this.processBooks(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<WeatherForecast[]>;
+                    return _observableThrow(e) as any as Observable<Book[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<WeatherForecast[]>;
+                return _observableThrow(response_) as any as Observable<Book[]>;
         }));
     }
 
-    protected processGetWeatherForecast(response: HttpResponseBase): Observable<WeatherForecast[]> {
+    protected processBooks(response: HttpResponseBase): Observable<Book[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -69,7 +69,7 @@ export class ServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(WeatherForecast.fromJS(item));
+                    result200!.push(Book.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -81,18 +81,20 @@ export class ServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<WeatherForecast[]>(null as any);
+        return _observableOf<Book[]>(null as any);
     }
 }
 
-export class WeatherForecast implements IWeatherForecast {
-    date?: Date;
-    temperatureC?: number;
-    readonly temperatureF?: number;
+export class Book implements IBook {
+    bookId?: number;
+    createdAt?: Date;
+    title?: string | undefined;
+    author?: string | undefined;
+    imageUrl?: string | undefined;
     summary?: string | undefined;
-    extraString?: string | undefined;
+    price?: number | undefined;
 
-    constructor(data?: IWeatherForecast) {
+    constructor(data?: IBook) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -103,38 +105,44 @@ export class WeatherForecast implements IWeatherForecast {
 
     init(_data?: any) {
         if (_data) {
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.temperatureC = _data["temperatureC"];
-            (<any>this).temperatureF = _data["temperatureF"];
+            this.bookId = _data["bookId"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.title = _data["title"];
+            this.author = _data["author"];
+            this.imageUrl = _data["imageUrl"];
             this.summary = _data["summary"];
-            this.extraString = _data["extraString"];
+            this.price = _data["price"];
         }
     }
 
-    static fromJS(data: any): WeatherForecast {
+    static fromJS(data: any): Book {
         data = typeof data === 'object' ? data : {};
-        let result = new WeatherForecast();
+        let result = new Book();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["temperatureC"] = this.temperatureC;
-        data["temperatureF"] = this.temperatureF;
+        data["bookId"] = this.bookId;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["title"] = this.title;
+        data["author"] = this.author;
+        data["imageUrl"] = this.imageUrl;
         data["summary"] = this.summary;
-        data["extraString"] = this.extraString;
+        data["price"] = this.price;
         return data;
     }
 }
 
-export interface IWeatherForecast {
-    date?: Date;
-    temperatureC?: number;
-    temperatureF?: number;
+export interface IBook {
+    bookId?: number;
+    createdAt?: Date;
+    title?: string | undefined;
+    author?: string | undefined;
+    imageUrl?: string | undefined;
     summary?: string | undefined;
-    extraString?: string | undefined;
+    price?: number | undefined;
 }
 
 export class ApiException extends Error {
