@@ -4,10 +4,11 @@ import { BrowserModule } from '@angular/platform-browser'
 import { environment } from 'src/environments/environment'
 import { API_BASE_URL } from 'src/shared/service-proxies/service-proxies'
 
-import { AppComponent } from './app.component'
+import { AppComponent } from './app.component';
+import { NavbarComponent } from './navbar/navbar.component'
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, NavbarComponent],
   imports: [BrowserModule, HttpClientModule],
   providers: [
     {
