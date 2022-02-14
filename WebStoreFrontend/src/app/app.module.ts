@@ -5,10 +5,11 @@ import { environment } from 'src/environments/environment'
 import { API_BASE_URL } from 'src/shared/service-proxies/service-proxies'
 
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './navbar/navbar.component'
+import { NavbarComponent } from './navbar/navbar.component';
+import { NavLinksComponent } from './nav-links/nav-links.component'
 
 @NgModule({
-  declarations: [AppComponent, NavbarComponent],
+  declarations: [AppComponent, NavbarComponent, NavLinksComponent],
   imports: [BrowserModule, HttpClientModule],
   providers: [
     {
