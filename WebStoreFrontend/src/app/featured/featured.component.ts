@@ -5,7 +5,7 @@ import {
 } from '../../shared/service-proxies/service-proxies'
 
 @Component({
-  selector: 'featured',
+  selector: 'app-featured',
   templateUrl: './featured.component.html',
   styleUrls: ['./featured.component.css'],
   providers: [ServiceProxy],
