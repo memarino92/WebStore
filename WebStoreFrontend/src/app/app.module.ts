@@ -6,10 +6,11 @@ import { API_BASE_URL } from 'src/shared/service-proxies/service-proxies'
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { NavLinksComponent } from './nav-links/nav-links.component'
+import { NavLinksComponent } from './nav-links/nav-links.component';
+import { CarouselComponent } from './carousel/carousel.component'
 
 @NgModule({
-  declarations: [AppComponent, NavbarComponent, NavLinksComponent],
+  declarations: [AppComponent, NavbarComponent, NavLinksComponent, CarouselComponent],
   imports: [BrowserModule, HttpClientModule],
   providers: [
     {
