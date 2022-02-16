@@ -14,7 +14,8 @@ import { FeaturedComponent } from 'src/app/featured/featured.component'
 import { FooterComponent } from 'src/app/footer/footer.component'
 import { HomeComponent } from './home/home.component'
 import { SearchComponent } from './search/search.component';
-import { SearchResultsComponent } from './search-results/search-results.component'
+import { SearchResultsComponent } from './search-results/search-results.component';
+import { BookListComponent } from './book-list/book-list.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -34,6 +35,7 @@ const routes: Routes = [
     HomeComponent,
     SearchComponent,
     SearchResultsComponent,
+    BookListComponent,
   ],
   imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes)],
   providers: [
