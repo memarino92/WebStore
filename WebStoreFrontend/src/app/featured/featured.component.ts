@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, Output } from '@angular/core'
 import {
   ServiceProxy,
   Book,
@@ -11,7 +11,7 @@ import {
   providers: [ServiceProxy],
 })
 export class FeaturedComponent implements OnInit {
-  books?: Book[]
+  @Output() books?: Book[]
 
   constructor(private bookService: ServiceProxy) {}
 
