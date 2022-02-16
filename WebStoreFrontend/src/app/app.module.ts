@@ -13,9 +13,12 @@ import { CategoriesComponent } from 'src/app/categories/categories.component'
 import { FeaturedComponent } from 'src/app/featured/featured.component'
 import { FooterComponent } from 'src/app/footer/footer.component'
 import { HomeComponent } from './home/home.component'
+import { SearchComponent } from './search/search.component';
+import { SearchResultsComponent } from './search-results/search-results.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
+  { path: 'search', component: SearchComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
 
@@ -29,6 +32,8 @@ const routes: Routes = [
     FeaturedComponent,
     FooterComponent,
     HomeComponent,
+    SearchComponent,
+    SearchResultsComponent,
   ],
   imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes)],
   providers: [
