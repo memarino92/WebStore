@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "WebStoreFrontend", "WebStoreFrontend\WebStoreFrontend.esproj", "{2C5D0327-04B0-4FF5-8504-DADB4932BDFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStoreAPI", "WebStoreAPI\WebStoreAPI.csproj", "{20E06E55-613A-4F26-84F1-5007962557B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStoreAPI", "WebStoreAPI\WebStoreAPI.csproj", "{20E06E55-613A-4F26-84F1-5007962557B4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{B78BF2B8-41AD-4933-8DD6-B9115B7C4118}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{20E06E55-613A-4F26-84F1-5007962557B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20E06E55-613A-4F26-84F1-5007962557B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20E06E55-613A-4F26-84F1-5007962557B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B78BF2B8-41AD-4933-8DD6-B9115B7C4118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B78BF2B8-41AD-4933-8DD6-B9115B7C4118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B78BF2B8-41AD-4933-8DD6-B9115B7C4118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B78BF2B8-41AD-4933-8DD6-B9115B7C4118}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

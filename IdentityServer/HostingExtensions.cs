@@ -1,9 +1,11 @@
 using Duende.IdentityServer;
+using Duende.IdentityServer.Test;
 using IdentityServer.Data;
 using IdentityServer.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Reflection;
 
 namespace IdentityServer;
 
@@ -11,10 +13,13 @@ internal static class HostingExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
+        var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+        const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
+
         builder.Services.AddRazorPages();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -31,9 +36,17 @@ internal static class HostingExtensions
                 // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                 options.EmitStaticAudienceClaim = true;
             })
-            .AddInMemoryIdentityResources(Config.IdentityResources)
-            .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryClients(Config.Clients)
+            .AddConfigurationStore(options =>
+            {
+                options.ConfigureDbContext = b => b.UseSqlite(connectionString,
+                    sql => sql.MigrationsAssembly(migrationsAssembly));
+            })
+            .AddOperationalStore(options =>
+            {
+                options.ConfigureDbContext = b => b.UseSqlite(connectionString,
+                    sql => sql.MigrationsAssembly(migrationsAssembly));
+            })
+            .AddTestUsers(TestUser.Users)
             .AddAspNetIdentity<ApplicationUser>();
         
         builder.Services.AddAuthentication()
