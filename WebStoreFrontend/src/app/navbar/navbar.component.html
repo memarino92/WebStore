@@ -1,17 +1,25 @@
 <!-- Navbar-->
 <nav class="flex h-20 w-full items-center justify-between p-8">
   <!-- Search -->
-  <form class="input-group d-none d-sm-flex my-auto w-auto">
+  <form
+    #searchForm="ngForm"
+    class="input-group d-none d-sm-flex my-auto w-auto"
+    (ngSubmit)="onSubmit()"
+  >
     <input
       autocomplete="off"
       type="search"
       class="form-control rounded"
       placeholder="Search"
       style="min-width: 125px"
+      name="search"
+      [(ngModel)]="searchParams"
     />
-    <span class="input-group-text d-none d-lg-flex border-0">
-      <i class="fas fa-search"></i>
-    </span>
+    <button type="submit">
+      <span class="input-group-text d-none d-lg-flex border-0">
+        <i class="fas fa-search"></i>
+      </span>
+    </button>
   </form>
   <!-- Brand logo -->
   <a
