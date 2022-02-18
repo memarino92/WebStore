@@ -1,27 +1,25 @@
-import { Component, OnInit, Output } from '@angular/core'
-import {
-  ServiceProxy,
-  Book,
-} from '../../shared/service-proxies/service-proxies'
+import { Component, OnDestroy, OnInit, Output } from '@angular/core'
+import { Subscription } from 'rxjs'
+import { Book } from 'src/shared/service-proxies/service-proxies'
+import { SearchService } from '../search.service'
 
 @Component({
   selector: 'app-search-results',
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.css'],
-  providers: [ServiceProxy],
 })
-export class SearchResultsComponent implements OnInit {
-  @Output() books?: Book[]
+export class SearchResultsComponent implements OnDestroy {
+  subscription: Subscription
+  @Output() searchResults?: Book[]
 
-  constructor(private bookService: ServiceProxy) {}
-
-  ngOnInit(): void {
-    this.getBooks()
+  constructor(private angularSearchService: SearchService) {
+    this.subscription = angularSearchService.searchResults$.subscribe(
+      (result) => (this.searchResults = result)
+    )
   }
 
-  getBooks() {
-    this.bookService.books().subscribe((result) => {
-      this.books = result
-    })
+  ngOnDestroy() {
+    // prevent memory leak when component destroyed
+    this.subscription.unsubscribe()
   }
 }

@@ -1,13 +1,19 @@
 <!-- Navbar-->
 <nav class="flex h-20 w-full items-center justify-between p-8">
   <!-- Search -->
-  <form class="input-group d-none d-sm-flex my-auto w-auto">
+  <form
+    #searchForm="ngForm"
+    class="input-group d-none d-sm-flex my-auto w-auto"
+  >
     <input
       autocomplete="off"
       type="search"
       class="form-control rounded"
       placeholder="Search"
       style="min-width: 125px"
+      name="search"
+      [(ngModel)]="searchParams"
+      (ngModelChange)="updateSearchParams()"
     />
     <span class="input-group-text d-none d-lg-flex border-0">
       <i class="fas fa-search"></i>
