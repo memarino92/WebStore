@@ -13,9 +13,14 @@ import { CategoriesComponent } from 'src/app/categories/categories.component'
 import { FeaturedComponent } from 'src/app/featured/featured.component'
 import { FooterComponent } from 'src/app/footer/footer.component'
 import { HomeComponent } from './home/home.component'
+import { SearchComponent } from './search/search.component'
+import { SearchResultsComponent } from './search-results/search-results.component'
+import { BookListComponent } from './book-list/book-list.component'
+import { FormsModule } from '@angular/forms'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
+  { path: 'search', component: SearchComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
 
@@ -29,8 +34,16 @@ const routes: Routes = [
     FeaturedComponent,
     FooterComponent,
     HomeComponent,
+    SearchComponent,
+    SearchResultsComponent,
+    BookListComponent,
   ],
-  imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes)],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
+    RouterModule.forRoot(routes),
+  ],
   providers: [
     {
       provide: API_BASE_URL,
