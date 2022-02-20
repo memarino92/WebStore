@@ -9,15 +9,11 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let book of books; let i = index">
-      <tr>
-        <th scope="row">{{ i + 1 }}</th>
-        <!-- Cover height classes not working, leaving out for now -->
-        <td><img src="" /></td>
-        <td>{{ book.title }}</td>
-        <td>{{ book.author }}</td>
-        <td>${{ book.price }}</td>
-      </tr>
-    </ng-container>
+    <tr
+      book-tr
+      *ngFor="let book of books; let index = index"
+      [book]="book"
+      [index]="index"
+    ></tr>
   </tbody>
 </table>
