@@ -17,10 +17,13 @@ import { SearchComponent } from './search/search.component'
 import { SearchResultsComponent } from './search-results/search-results.component'
 import { BookListComponent } from './book-list/book-list.component'
 import { FormsModule } from '@angular/forms'
+import { AdminPageComponent } from './admin-page/admin-page.component';
+import { BooksTableComponent } from './books-table/books-table.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'search', component: SearchComponent },
+  { path: 'admin', component: AdminPageComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
 
@@ -37,6 +40,8 @@ const routes: Routes = [
     SearchComponent,
     SearchResultsComponent,
     BookListComponent,
+    AdminPageComponent,
+    BooksTableComponent,
   ],
   imports: [
     BrowserModule,
