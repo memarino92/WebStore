@@ -16,7 +16,7 @@ internal static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
-        const string connectionString = "Server=localhost,1443;Database=WebStore;UserID=sa;Password=Pass@word1;";
+        var connectionString = "Data Source=localhost;Initial Catalog=master;User ID=sa;Password=Pass@word1";
 
         builder.Services.AddRazorPages();
 
