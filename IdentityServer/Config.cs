@@ -31,16 +31,18 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.Code,
     
                 // where to redirect to after login
-                RedirectUris = { "https://localhost:4200/signin-oidc" },
+                RedirectUris = { "https://localhost:4200/auth" },
 
                 // where to redirect to after logout
-                PostLogoutRedirectUris = { "https://localhost:4200/signout-callback-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:4200/auth" },
+
+                AllowedCorsOrigins = { "https://localhost:4200"},
 
                 AllowedScopes = new List<string>
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "api1"
+                    "scope1"
                 }
 }
 
