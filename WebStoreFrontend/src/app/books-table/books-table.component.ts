@@ -8,5 +8,6 @@ import { Book } from 'src/shared/service-proxies/service-proxies'
 })
 export class BooksTableComponent {
   @Input() books?: Book[]
+
   constructor() {}
 }

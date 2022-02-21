@@ -17,8 +17,11 @@ import { SearchComponent } from './search/search.component'
 import { SearchResultsComponent } from './search-results/search-results.component'
 import { BookListComponent } from './book-list/book-list.component'
 import { FormsModule } from '@angular/forms'
-import { AdminPageComponent } from './admin-page/admin-page.component';
+import { AdminPageComponent } from './admin-page/admin-page.component'
 import { BooksTableComponent } from './books-table/books-table.component'
+import { CloudinaryModule } from '@cloudinary/ng';
+import { BookRowComponent } from './book-row/book-row.component';
+import { BookCardComponent } from './book-card/book-card.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -42,12 +45,15 @@ const routes: Routes = [
     BookListComponent,
     AdminPageComponent,
     BooksTableComponent,
+    BookRowComponent,
+    BookCardComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(routes),
+    CloudinaryModule,
   ],
   providers: [
     {
