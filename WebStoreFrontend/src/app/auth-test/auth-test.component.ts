@@ -12,7 +12,7 @@ export class AuthTestComponent implements OnInit {
   ngOnInit(): void {
     this.oidcSecurityService
       .checkAuth()
-      .subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {
+      .subscribe(({ isAuthenticated, userData }) => {
         console.log('is authenticated', isAuthenticated)
         console.log('userData', userData)
       })

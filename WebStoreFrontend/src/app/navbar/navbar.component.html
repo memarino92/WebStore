@@ -68,6 +68,15 @@
         </li>
       </ul>
     </div>
+    <!-- User Name or Login Button-->
+    <div *ngIf="!userIsAuthenticated; else userNameTemplate">
+      <button routerLink="/auth">Log In</button>
+    </div>
+    <ng-template #userNameTemplate>
+      <div class="m-2">
+        <button routerLink="/auth">{{ userData?.name }}</button>
+      </div>
+    </ng-template>
     <!-- Avatar -->
     <div class="dropdown">
       <a
