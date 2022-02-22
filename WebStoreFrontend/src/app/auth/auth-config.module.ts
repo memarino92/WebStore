@@ -6,8 +6,8 @@ import { AuthModule } from 'angular-auth-oidc-client'
     AuthModule.forRoot({
       config: {
         authority: 'https://localhost:5001',
-        redirectUrl: 'https://localhost:4200/auth',
-        postLogoutRedirectUri: 'https://localhost:4200/auth',
+        redirectUrl: 'https://localhost:4200/home',
+        postLogoutRedirectUri: 'https://localhost:4200/home',
         clientId: 'bff',
         scope: 'openid profile', // 'openid profile offline_access ' + your scopes
         responseType: 'code',
