@@ -17,12 +17,18 @@ import { SearchComponent } from './search/search.component'
 import { SearchResultsComponent } from './search-results/search-results.component'
 import { BookListComponent } from './book-list/book-list.component'
 import { FormsModule } from '@angular/forms'
-import { AuthTestComponent } from './auth-test/auth-test.component';
+import { AdminPageComponent } from './admin-page/admin-page.component'
+import { BooksTableComponent } from './books-table/books-table.component'
+import { CloudinaryModule } from '@cloudinary/ng'
+import { BookRowComponent } from './book-row/book-row.component'
+import { BookCardComponent } from './book-card/book-card.component'
+import { AuthTestComponent } from './auth-test/auth-test.component'
 import { AuthConfigModule } from './auth/auth-config.module'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'search', component: SearchComponent },
+  { path: 'admin', component: AdminPageComponent },
   { path: 'auth', component: AuthTestComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
@@ -40,6 +46,10 @@ const routes: Routes = [
     SearchComponent,
     SearchResultsComponent,
     BookListComponent,
+    AdminPageComponent,
+    BooksTableComponent,
+    BookRowComponent,
+    BookCardComponent,
     AuthTestComponent,
   ],
   imports: [
@@ -47,6 +57,7 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(routes),
+    CloudinaryModule,
     AuthConfigModule,
   ],
   providers: [

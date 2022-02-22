@@ -1,26 +1,26 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { CloudinaryImage } from '@cloudinary/url-gen/assets/CloudinaryImage'
 import { Cloudinary } from '@cloudinary/url-gen'
 import { thumbnail } from '@cloudinary/url-gen/actions/resize'
 import { imageNameFromUrl } from 'src/shared/utils/utils'
+import { Book } from 'src/shared/service-proxies/service-proxies'
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  selector: 'app-book-card',
+  templateUrl: './book-card.component.html',
+  styleUrls: ['./book-card.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class BookCardComponent implements OnInit {
+  @Input() book!: Book
+
   img!: CloudinaryImage
 
   constructor() {}
+
   ngOnInit(): void {
     const myCld = new Cloudinary({ cloud: { cloudName: 'mmarino' } })
     this.img = myCld
-      .image(
-        imageNameFromUrl(
-          'https://res.cloudinary.com/mmarino/image/upload/v1644598562/counter_at_bookstore_mhfoxb.jpg'
-        )
-      )
-      .resize(thumbnail().width(731).height(384))
+      .image(imageNameFromUrl(this.book.imageUrl))
+      .resize(thumbnail().width(130).height(160))
   }
 }
