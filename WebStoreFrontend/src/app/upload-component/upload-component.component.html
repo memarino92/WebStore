@@ -1,0 +1,5 @@
+<p>upload-component works!</p>
+<form (ngSubmit)="uploadFile()">
+  <input (change)="onFileSelect($event)" type="file" name="file" />
+  <input type="submit" value="Upload File" name="submit" />
+</form>

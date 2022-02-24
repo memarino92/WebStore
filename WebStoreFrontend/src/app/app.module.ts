@@ -24,12 +24,14 @@ import { BookRowComponent } from './book-row/book-row.component'
 import { BookCardComponent } from './book-card/book-card.component'
 import { AuthTestComponent } from './auth-test/auth-test.component'
 import { AuthConfigModule } from './auth/auth-config.module'
+import { UploadComponentComponent } from './upload-component/upload-component.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'search', component: SearchComponent },
   { path: 'admin', component: AdminPageComponent },
   { path: 'auth', component: AuthTestComponent },
+  { path: 'upload', component: UploadComponentComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
 
@@ -51,6 +53,7 @@ const routes: Routes = [
     BookRowComponent,
     BookCardComponent,
     AuthTestComponent,
+    UploadComponentComponent,
   ],
   imports: [
     BrowserModule,
