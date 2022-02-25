@@ -24,5 +24,15 @@ namespace WebStoreAPI.Controllers
             var result =  _webStoreContext.Book.Where(x => x.BookId > 0);
             return result;
         }
+
+        [HttpPost(Name = "CreateBook")]
+        public Book CreateBook([FromBody]Book book)
+        {
+            var newBook = book;
+            newBook.CreatedAt = DateTime.Now;
+            _webStoreContext.Book.Add(newBook);
+            _webStoreContext.SaveChanges();
+            return newBook;
+        }
     }
 }
