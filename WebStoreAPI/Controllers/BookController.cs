@@ -30,6 +30,8 @@ namespace WebStoreAPI.Controllers
         {
             var newBook = book;
             newBook.CreatedAt = DateTime.Now;
+            _webStoreContext.Book.Add(newBook);
+            _webStoreContext.SaveChanges();
             return newBook;
         }
     }

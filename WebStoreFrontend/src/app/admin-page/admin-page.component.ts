@@ -26,8 +26,8 @@ export class AdminPageComponent implements OnInit {
 
   createBook() {
     let newBook = new Book()
-    newBook.author = 'Another Test Author'
-    newBook.title = 'Another Test Title'
+    newBook.author = 'Live Demo Author'
+    newBook.title = 'Live Demo Title'
     this.bookService.createBook(newBook).subscribe((result) => {
       console.log(result)
     })
