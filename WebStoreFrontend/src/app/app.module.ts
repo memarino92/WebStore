@@ -25,6 +25,7 @@ import { BookCardComponent } from './book-card/book-card.component'
 import { AuthTestComponent } from './auth-test/auth-test.component'
 import { AuthConfigModule } from './auth/auth-config.module'
 import { ImageUploadComponent } from './image-upload/image-upload.component'
+import { BookInfoFormComponent } from './book-info-form/book-info-form.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'admin', component: AdminPageComponent },
   { path: 'auth', component: AuthTestComponent },
   { path: 'upload', component: ImageUploadComponent },
+  { path: 'form', component: BookInfoFormComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
 
@@ -54,6 +56,7 @@ const routes: Routes = [
     BookCardComponent,
     AuthTestComponent,
     ImageUploadComponent,
+    BookInfoFormComponent,
   ],
   imports: [
     BrowserModule,

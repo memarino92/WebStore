@@ -1,0 +1,41 @@
+<div class="w-50 flex-column flex">
+  <p>book-info-form works!</p>
+  <form
+    #searchForm="ngForm"
+    class="input-group d-none d-sm-flex my-auto w-auto"
+    (ngSubmit)="onSubmit()"
+  >
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control rounded"
+      placeholder="Title"
+      style="min-width: 125px"
+      name="title"
+    />
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control rounded"
+      placeholder="Author"
+      style="min-width: 125px"
+      name="author"
+    />
+    <input
+      autocomplete="off"
+      type="number"
+      class="form-control rounded"
+      placeholder="Search"
+      style="min-width: 125px"
+      name="price"
+    />
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control rounded"
+      placeholder="Summary"
+      style="min-width: 125px"
+      name="summary"
+    />
+  </form>
+</div>
