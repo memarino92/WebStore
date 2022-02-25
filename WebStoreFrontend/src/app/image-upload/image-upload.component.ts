@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 
 @Component({
-  selector: 'app-upload-component',
-  templateUrl: './upload-component.component.html',
-  styleUrls: ['./upload-component.component.css'],
+  selector: 'app-image-upload',
+  templateUrl: './image-upload.component.html',
+  styleUrls: ['./image-upload.component.css'],
 })
-export class UploadComponentComponent implements OnInit {
+export class ImageUploadComponent {
   file?: any
   constructor() {}
-
-  ngOnInit(): void {}
 
   uploadFile() {
     let url = `https://api.cloudinary.com/v1_1/mmarino/image/upload`
