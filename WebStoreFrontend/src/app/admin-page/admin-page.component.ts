@@ -1,4 +1,5 @@
 import { Component, OnInit, Output } from '@angular/core'
+import { BookInfoFormComponent } from 'src/app/book-info-form/book-info-form.component'
 import {
   ServiceProxy,
   Book,
@@ -24,10 +25,9 @@ export class AdminPageComponent implements OnInit {
     })
   }
 
-  createBook() {
-    let newBook = new Book()
-    newBook.author = 'Live Demo Author'
-    newBook.title = 'Live Demo Title'
+  createBook(book: Book) {
+    let newBook = new Book(book)
+
     this.bookService.createBook(newBook).subscribe((result) => {
       console.log(result)
     })

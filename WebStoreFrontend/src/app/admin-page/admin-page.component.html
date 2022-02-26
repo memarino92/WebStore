@@ -4,8 +4,6 @@
 <!-- Nav Links -->
 <app-nav-links></app-nav-links>
 
-<button (click)="createBook()" type="submit">Create new book!</button>
-
 <!-- Admin Panel -->
 <div class="m-2">
   <!-- Tabs navs -->
@@ -45,6 +43,7 @@
       role="tabpanel"
       aria-labelledby="ex1-tab-1"
     >
+      <app-book-info-form (bookInfo)="createBook($event)"></app-book-info-form>
       <app-books-table [books]="books"></app-books-table>
     </div>
     <div

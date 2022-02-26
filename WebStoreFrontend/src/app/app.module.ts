@@ -17,6 +17,7 @@ import { SearchComponent } from './search/search.component'
 import { SearchResultsComponent } from './search-results/search-results.component'
 import { BookListComponent } from './book-list/book-list.component'
 import { FormsModule } from '@angular/forms'
+import { ReactiveFormsModule } from '@angular/forms'
 import { AdminPageComponent } from './admin-page/admin-page.component'
 import { BooksTableComponent } from './books-table/books-table.component'
 import { CloudinaryModule } from '@cloudinary/ng'
@@ -62,6 +63,7 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(routes),
     CloudinaryModule,
     AuthConfigModule,

@@ -1,41 +1,66 @@
-<div class="w-50 flex-column flex">
-  <p>book-info-form works!</p>
+<div class="w-50 flex-column m-4">
   <form
-    #searchForm="ngForm"
-    class="input-group d-none d-sm-flex my-auto w-auto"
+    [formGroup]="bookInfoForm"
+    class="input-group d-none d-sm-flex flex-column my-auto w-auto"
     (ngSubmit)="onSubmit()"
   >
-    <input
-      autocomplete="off"
-      type="text"
-      class="form-control rounded"
-      placeholder="Title"
-      style="min-width: 125px"
-      name="title"
-    />
-    <input
-      autocomplete="off"
-      type="text"
-      class="form-control rounded"
-      placeholder="Author"
-      style="min-width: 125px"
-      name="author"
-    />
-    <input
-      autocomplete="off"
-      type="number"
-      class="form-control rounded"
-      placeholder="Search"
-      style="min-width: 125px"
-      name="price"
-    />
-    <input
-      autocomplete="off"
-      type="text"
-      class="form-control rounded"
-      placeholder="Summary"
-      style="min-width: 125px"
-      name="summary"
-    />
+    <div class="m-2">
+      <label>Title</label>
+      <input
+        autocomplete="off"
+        type="text"
+        class="form-control rounded"
+        placeholder="Title"
+        style="min-width: 125px"
+        name="title"
+        formControlName="title"
+      />
+    </div>
+    <div class="m-2">
+      <label>Author</label>
+      <input
+        autocomplete="off"
+        type="text"
+        class="form-control rounded"
+        placeholder="Author"
+        style="min-width: 125px"
+        name="author"
+        formControlName="author"
+      />
+    </div>
+    <div class="m-2">
+      <label>Price</label>
+      <input
+        autocomplete="off"
+        type="number"
+        class="form-control rounded"
+        placeholder="Price"
+        style="min-width: 125px"
+        name="price"
+        formControlName="price"
+      />
+    </div>
+    <div class="m-2">
+      <label>Summary</label>
+      <input
+        autocomplete="off"
+        type="text"
+        class="form-control rounded"
+        placeholder="Summary"
+        style="min-width: 125px"
+        name="summary"
+        formControlName="summary"
+      />
+    </div>
+    <div class="m-2">
+      <app-image-upload
+        *ngIf="imageUrl === ''; else bookImage"
+        (newImageUrlEvent)="addImage($event)"
+      ></app-image-upload>
+      <ng-template #bookImage>
+        <img src="{{ imageUrl }}" />
+      </ng-template>
+    </div>
+    <button type="submit" class="mt-4">Create book</button>
   </form>
 </div>
