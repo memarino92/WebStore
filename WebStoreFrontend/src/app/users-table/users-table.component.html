@@ -1,0 +1,17 @@
+<table class="table-sm table-hover table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      user-tr
+      *ngFor="let user of users; let index = index"
+      [user]="user"
+      [index]="index"
+    ></tr>
+  </tbody>
+</table>

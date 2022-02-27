@@ -26,7 +26,9 @@ import { BookCardComponent } from './book-card/book-card.component'
 import { AuthTestComponent } from './auth-test/auth-test.component'
 import { AuthConfigModule } from './auth/auth-config.module'
 import { ImageUploadComponent } from './image-upload/image-upload.component'
-import { BookInfoFormComponent } from './book-info-form/book-info-form.component'
+import { BookInfoFormComponent } from './book-info-form/book-info-form.component';
+import { UsersTableComponent } from './users-table/users-table.component';
+import { UserRowComponent } from './user-row/user-row.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -58,6 +60,8 @@ const routes: Routes = [
     AuthTestComponent,
     ImageUploadComponent,
     BookInfoFormComponent,
+    UsersTableComponent,
+    UserRowComponent,
   ],
   imports: [
     BrowserModule,
