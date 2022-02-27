@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebStoreAPI;
 
@@ -23,6 +24,7 @@ builder.Services.AddControllers();
 // Add EF Core config
 builder.Services.AddDbContext<WebStoreContext>(
     options => options.UseSqlServer("Server=localhost;User ID=sa;Password=Pass@word1;"));
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
