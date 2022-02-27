@@ -1,4 +1,6 @@
-import { Component, OnInit, Output } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
+import { Subject } from 'rxjs'
+import { BookInfoFormComponent } from 'src/app/book-info-form/book-info-form.component'
 import {
   ServiceProxy,
   Book,
@@ -11,7 +13,8 @@ import {
   providers: [ServiceProxy],
 })
 export class AdminPageComponent implements OnInit {
-  @Output() books?: Book[]
+  books?: Book[]
+  saveBookEventSubject: Subject<void> = new Subject<void>()
 
   constructor(private bookService: ServiceProxy) {}
 
@@ -24,12 +27,15 @@ export class AdminPageComponent implements OnInit {
     })
   }
 
-  createBook() {
-    let newBook = new Book()
-    newBook.author = 'Live Demo Author'
-    newBook.title = 'Live Demo Title'
+  createBook(book: Book) {
+    let newBook = new Book(book)
+
     this.bookService.createBook(newBook).subscribe((result) => {
       console.log(result)
     })
+  }
+
+  saveChanges() {
+    this.saveBookEventSubject.next()
   }
 }

@@ -17,6 +17,7 @@ import { SearchComponent } from './search/search.component'
 import { SearchResultsComponent } from './search-results/search-results.component'
 import { BookListComponent } from './book-list/book-list.component'
 import { FormsModule } from '@angular/forms'
+import { ReactiveFormsModule } from '@angular/forms'
 import { AdminPageComponent } from './admin-page/admin-page.component'
 import { BooksTableComponent } from './books-table/books-table.component'
 import { CloudinaryModule } from '@cloudinary/ng'
@@ -25,6 +26,7 @@ import { BookCardComponent } from './book-card/book-card.component'
 import { AuthTestComponent } from './auth-test/auth-test.component'
 import { AuthConfigModule } from './auth/auth-config.module'
 import { ImageUploadComponent } from './image-upload/image-upload.component'
+import { BookInfoFormComponent } from './book-info-form/book-info-form.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -32,6 +34,7 @@ const routes: Routes = [
   { path: 'admin', component: AdminPageComponent },
   { path: 'auth', component: AuthTestComponent },
   { path: 'upload', component: ImageUploadComponent },
+  { path: 'form', component: BookInfoFormComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
 
@@ -54,11 +57,13 @@ const routes: Routes = [
     BookCardComponent,
     AuthTestComponent,
     ImageUploadComponent,
+    BookInfoFormComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(routes),
     CloudinaryModule,
     AuthConfigModule,
