@@ -1,6 +1,13 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core'
 import { FormGroup, FormControl } from '@angular/forms'
-import { ImageUploadComponent } from 'src/app/image-upload/image-upload.component'
+import { Observable, Subscription } from 'rxjs'
 import { Book } from 'src/shared/service-proxies/service-proxies'
 
 @Component({
@@ -8,7 +15,10 @@ import { Book } from 'src/shared/service-proxies/service-proxies'
   templateUrl: './book-info-form.component.html',
   styleUrls: ['./book-info-form.component.css'],
 })
-export class BookInfoFormComponent implements OnInit {
+export class BookInfoFormComponent implements OnInit, OnDestroy {
+  private eventsSubscription!: Subscription
+  @Input() events!: Observable<void>
+
   bookInfoForm = new FormGroup({
     title: new FormControl(''),
     author: new FormControl(''),
@@ -23,9 +33,9 @@ export class BookInfoFormComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    if (this.isEdit) {
-      //...
-    }
+    this.eventsSubscription = this.events.subscribe(() => {
+      this.onSubmit()
+    })
   }
 
   addImage(string: string) {
@@ -36,5 +46,10 @@ export class BookInfoFormComponent implements OnInit {
     let data = { ...this.bookInfoForm.value, imageUrl: this.imageUrl }
 
     this.bookInfo.emit(data)
+  }
+
+  ngOnDestroy() {
+    // prevent memory leak when component destroyed
+    this.eventsSubscription.unsubscribe()
   }
 }
