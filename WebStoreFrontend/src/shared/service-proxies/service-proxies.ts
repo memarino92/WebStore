@@ -262,16 +262,21 @@ export class ServiceProxy {
     }
 
     /**
+     * @param body (optional) 
      * @return Success
      */
-    createUser(): Observable<User> {
+    createUser(body: CreateUserDTO | undefined): Observable<User> {
         let url_ = this.baseUrl + "/User";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json",
                 "Accept": "text/plain"
             })
         };
@@ -371,6 +376,50 @@ export interface IBook {
     imageUrl?: string | undefined;
     summary?: string | undefined;
     price?: number | undefined;
+}
+
+export class CreateUserDTO implements ICreateUserDTO {
+    userName?: string | undefined;
+    password?: string | undefined;
+    email?: string | undefined;
+
+    constructor(data?: ICreateUserDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"];
+            this.password = _data["password"];
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): CreateUserDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateUserDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName;
+        data["password"] = this.password;
+        data["email"] = this.email;
+        return data;
+    }
+}
+
+export interface ICreateUserDTO {
+    userName?: string | undefined;
+    password?: string | undefined;
+    email?: string | undefined;
 }
 
 export class User implements IUser {

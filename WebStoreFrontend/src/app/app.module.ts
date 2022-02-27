@@ -26,17 +26,17 @@ import { BookCardComponent } from './book-card/book-card.component'
 import { AuthTestComponent } from './auth-test/auth-test.component'
 import { AuthConfigModule } from './auth/auth-config.module'
 import { ImageUploadComponent } from './image-upload/image-upload.component'
-import { BookInfoFormComponent } from './book-info-form/book-info-form.component';
-import { UsersTableComponent } from './users-table/users-table.component';
+import { BookInfoFormComponent } from 'src/app/book-info-form/book-info-form.component'
+import { UsersTableComponent } from './users-table/users-table.component'
 import { UserRowComponent } from './user-row/user-row.component'
+import { UserInfoFormComponent } from './user-info-form/user-info-form.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'search', component: SearchComponent },
   { path: 'admin', component: AdminPageComponent },
   { path: 'auth', component: AuthTestComponent },
-  { path: 'upload', component: ImageUploadComponent },
-  { path: 'form', component: BookInfoFormComponent },
+  { path: 'form', component: UserInfoFormComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
 
@@ -62,6 +62,7 @@ const routes: Routes = [
     BookInfoFormComponent,
     UsersTableComponent,
     UserRowComponent,
+    UserInfoFormComponent,
   ],
   imports: [
     BrowserModule,

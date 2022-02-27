@@ -26,7 +26,6 @@ export class BookInfoFormComponent implements OnInit, OnDestroy {
     summary: new FormControl(''),
   })
 
-  isEdit: any
   imageUrl: string = ''
 
   @Output() bookInfo = new EventEmitter<Book>()

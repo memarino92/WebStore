@@ -4,6 +4,7 @@ import {
   ServiceProxy,
   Book,
   User,
+  CreateUserDTO,
 } from '../../shared/service-proxies/service-proxies'
 
 @Component({
@@ -16,6 +17,7 @@ export class AdminPageComponent implements OnInit {
   books?: Book[]
   users?: User[]
   saveBookEventSubject: Subject<void> = new Subject<void>()
+  saveUserEventSubject: Subject<void> = new Subject<void>()
 
   constructor(private _service: ServiceProxy) {}
 
@@ -43,8 +45,13 @@ export class AdminPageComponent implements OnInit {
     this.saveBookEventSubject.next()
   }
 
-  createUser() {
-    this._service.createUser().subscribe((response) => {
+  saveUser() {
+    this.saveUserEventSubject.next()
+  }
+
+  createUser(data: CreateUserDTO) {
+    console.log(data)
+    this._service.createUser(data).subscribe((response) => {
       console.log(response)
     })
   }

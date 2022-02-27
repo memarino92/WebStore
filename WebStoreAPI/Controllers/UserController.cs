@@ -25,15 +25,15 @@ namespace WebStoreAPI.Controllers
         [HttpGet(Name = "getAllUsers")]
         public IEnumerable<User> Get()
         {
-            var result = _webStoreContext.User.ToList();
+            var result = _userManager.Users.ToList();
             return result;
         }
 
         [HttpPost(Name = "createUser")]
-        public async Task<User> CreateUser()
+        public async Task<User> CreateUser([FromBody]CreateUserDTO createUserDTO)
         {
-            var user = new User { Email = "test@email.com", UserName = "testuser" };
-            var result = await _userManager.CreateAsync(user, @"T3st!P@ssword");
+            var user = new User { Email = createUserDTO.Email, UserName = createUserDTO.UserName };
+            var result = await _userManager.CreateAsync(user, createUserDTO.Password);
             
             return user;
         }
