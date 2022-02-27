@@ -96,15 +96,72 @@
           </div>
         </div>
       </div>
+
+      <!-- Books Table -->
       <app-books-table [books]="books"></app-books-table>
     </div>
+    <!-- Users tab content -->
     <div
       class="tab-pane fade"
       id="ex1-tabs-2"
       role="tabpanel"
       aria-labelledby="ex1-tab-2"
     >
-      <p>Users Table</p>
+      <!-- Create New User Button -->
+      <button
+        type="button"
+        class="btn"
+        data-mdb-toggle="modal"
+        data-mdb-target="#userModal"
+      >
+        Create New User
+      </button>
+
+      <!-- Create New User Modal -->
+      <div
+        class="modal fade"
+        id="userModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                Create New User
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-mdb-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <app-user-info-form
+                (userInfo)="createUser($event)"
+                [events]="saveUserEventSubject.asObservable()"
+              ></app-user-info-form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn" data-mdb-dismiss="modal">
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn"
+                (click)="saveUser()"
+                data-mdb-dismiss="modal"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Users Table -->
+      <app-users-table [users]="users"></app-users-table>
     </div>
   </div>
   <!-- Tabs content -->

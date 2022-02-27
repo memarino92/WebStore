@@ -1,0 +1,44 @@
+<div class="w-50 flex-column m-4">
+  <form
+    [formGroup]="userInfoForm"
+    class="input-group d-none d-sm-flex flex-column my-auto w-auto"
+    (ngSubmit)="onSubmit()"
+  >
+    <div class="m-2">
+      <label>Username</label>
+      <input
+        autocomplete="off"
+        type="text"
+        class="form-control rounded"
+        placeholder="Username"
+        style="min-width: 125px"
+        name="username"
+        formControlName="username"
+      />
+    </div>
+    <div class="m-2">
+      <label>Email</label>
+      <input
+        autocomplete="off"
+        type="text"
+        class="form-control rounded"
+        placeholder="Email"
+        style="min-width: 125px"
+        name="email"
+        formControlName="email"
+      />
+    </div>
+    <div class="m-2">
+      <label>Password</label>
+      <input
+        autocomplete="off"
+        type="password"
+        class="form-control rounded"
+        placeholder="Password"
+        style="min-width: 125px"
+        name="password"
+        formControlName="password"
+      />
+    </div>
+  </form>
+</div>

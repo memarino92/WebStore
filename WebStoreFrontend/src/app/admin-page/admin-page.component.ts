@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core'
 import { Subject } from 'rxjs'
-import { BookInfoFormComponent } from 'src/app/book-info-form/book-info-form.component'
 import {
   ServiceProxy,
   Book,
+  User,
+  CreateUserDTO,
 } from '../../shared/service-proxies/service-proxies'
 
 @Component({
@@ -14,28 +15,44 @@ import {
 })
 export class AdminPageComponent implements OnInit {
   books?: Book[]
+  users?: User[]
   saveBookEventSubject: Subject<void> = new Subject<void>()
+  saveUserEventSubject: Subject<void> = new Subject<void>()
 
-  constructor(private bookService: ServiceProxy) {}
+  constructor(private _service: ServiceProxy) {}
 
   ngOnInit(): void {
     this.getBooks()
   }
   getBooks() {
-    this.bookService.books().subscribe((result) => {
+    this._service.books().subscribe((result) => {
       this.books = result
+    })
+    this._service.getAllUsers().subscribe((result) => {
+      this.users = result
     })
   }
 
   createBook(book: Book) {
     let newBook = new Book(book)
 
-    this.bookService.createBook(newBook).subscribe((result) => {
+    this._service.createBook(newBook).subscribe((result) => {
       console.log(result)
     })
   }
 
   saveChanges() {
     this.saveBookEventSubject.next()
+  }
+
+  saveUser() {
+    this.saveUserEventSubject.next()
+  }
+
+  createUser(data: CreateUserDTO) {
+    console.log(data)
+    this._service.createUser(data).subscribe((response) => {
+      console.log(response)
+    })
   }
 }
