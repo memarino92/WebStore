@@ -14,7 +14,7 @@ namespace WebStoreAPI
         public WebStoreContext(DbContextOptions<WebStoreContext> options)
             : base(options)
         {
-            DbPath = "Server=localhost,1443;Database=WebStore;UserID=sa;Password=Pass@word1;";
+            DbPath = "Data Source=localhost;Initial Catalog=master;User ID=sa;Password=Pass@word1";
         }
     }
 }

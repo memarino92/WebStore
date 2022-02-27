@@ -42,4 +42,10 @@ export class AdminPageComponent implements OnInit {
   saveChanges() {
     this.saveBookEventSubject.next()
   }
+
+  createUser() {
+    this._service.createUser().subscribe((response) => {
+      console.log(response)
+    })
+  }
 }

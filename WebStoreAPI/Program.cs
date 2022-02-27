@@ -23,8 +23,11 @@ builder.Services.AddControllers();
 
 // Add EF Core config
 builder.Services.AddDbContext<WebStoreContext>(
-    options => options.UseSqlServer("Server=localhost;User ID=sa;Password=Pass@word1;"));
+    options => options.UseSqlServer("Data Source=localhost;Initial Catalog=master;User ID=sa;Password=Pass@word1"));
 
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<WebStoreContext>()
+    .AddDefaultTokenProviders();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
