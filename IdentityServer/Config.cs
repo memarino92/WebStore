@@ -16,7 +16,7 @@ public static class Config
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
         {
-            new ApiScope("scope1"),
+            new ApiScope("api1"),
             new ApiScope("scope2"),
         };
 
@@ -42,7 +42,8 @@ public static class Config
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "scope1"
+                    "api1",
+                    "offline_access"
                 }
 }
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebStoreAPI.Controllers
 {
@@ -30,6 +29,7 @@ namespace WebStoreAPI.Controllers
             _webStoreContext = context;
         }
 
+        [Authorize]
         [HttpGet(Name = "getAllUsers")]
         public IEnumerable<User> Get()
         {
