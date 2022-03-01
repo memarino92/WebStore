@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { RouterModule, Routes } from '@angular/router'
@@ -31,6 +31,7 @@ import { UsersTableComponent } from './users-table/users-table.component'
 import { UserRowComponent } from './user-row/user-row.component'
 import { UserInfoFormComponent } from './user-info-form/user-info-form.component'
 import { CartPageComponent } from './cart-page/cart-page.component'
+import { TokenInterceptor } from './TokenInterceptor'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -77,6 +78,8 @@ const routes: Routes = [
     AuthConfigModule,
   ],
   providers: [
+    HttpClientModule,
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     {
       provide: API_BASE_URL,
       useFactory: () => environment.API_BASE_URL,

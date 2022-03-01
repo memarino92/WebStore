@@ -25,12 +25,10 @@ export class NavbarComponent implements OnInit {
     cartService.cartItems$.subscribe((result) => (this.cartItems = result))
   }
   ngOnInit(): void {
-    this.oidcSecurityService
-      .checkAuth()
-      .subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {
-        this.userData = userData
-        this.userIsAuthenticated = isAuthenticated
-      })
+    this.userData = this.oidcSecurityService.getUserData()
+    // console.log('user data from navbar', this.userData)
+    this.userIsAuthenticated = this.oidcSecurityService.isAuthenticated()
+    // console.log('is authenticated from navbar', this.userIsAuthenticated)
   }
 
   updateSearchParams() {
