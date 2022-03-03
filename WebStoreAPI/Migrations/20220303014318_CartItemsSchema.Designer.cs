@@ -12,8 +12,8 @@ using WebStoreAPI;
 namespace WebStoreAPI.Migrations
 {
     [DbContext(typeof(WebStoreContext))]
-    [Migration("20220227051310_IdentityUserModel")]
-    partial class IdentityUserModel
+    [Migration("20220303014318_CartItemsSchema")]
+    partial class CartItemsSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -190,6 +190,54 @@ namespace WebStoreAPI.Migrations
                     b.ToTable("Book");
                 });
 
+            modelBuilder.Entity("WebStoreAPI.Cart", b =>
+                {
+                    b.Property<int>("CartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CartId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Cart");
+                });
+
+            modelBuilder.Entity("WebStoreAPI.CartItem", b =>
+                {
+                    b.Property<string>("CartItemId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CartItemId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("CartItem");
+                });
+
             modelBuilder.Entity("WebStoreAPI.User", b =>
                 {
                     b.Property<string>("Id")
@@ -304,6 +352,51 @@ namespace WebStoreAPI.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WebStoreAPI.Cart", b =>
+                {
+                    b.HasOne("WebStoreAPI.User", "User")
+                        .WithMany("Carts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebStoreAPI.CartItem", b =>
+                {
+                    b.HasOne("WebStoreAPI.Book", "Book")
+                        .WithMany("Items")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebStoreAPI.Cart", "Cart")
+                        .WithMany("Items")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Cart");
+                });
+
+            modelBuilder.Entity("WebStoreAPI.Book", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("WebStoreAPI.Cart", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("WebStoreAPI.User", b =>
+                {
+                    b.Navigation("Carts");
                 });
 #pragma warning restore 612, 618
         }

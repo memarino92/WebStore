@@ -14,5 +14,7 @@ namespace WebStoreAPI
         public string? Summary { get; set; }
 
         public decimal? Price { get; set; }
+
+        public List<CartItem> Items { get; set; }
     }
 }
