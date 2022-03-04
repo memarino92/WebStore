@@ -88,7 +88,7 @@ export class ServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    createBook(body: Book | undefined): Observable<Book> {
+    createBook(body: CreateBookDTO | undefined): Observable<Book> {
         let url_ = this.baseUrl + "/Book";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1111,6 +1111,62 @@ export interface ICartItem {
     book?: Book;
     cartId?: number;
     cart?: Cart;
+}
+
+export class CreateBookDTO implements ICreateBookDTO {
+    bookId?: number;
+    title?: string | undefined;
+    author?: string | undefined;
+    imageUrl?: string | undefined;
+    summary?: string | undefined;
+    price?: number | undefined;
+
+    constructor(data?: ICreateBookDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.bookId = _data["bookId"];
+            this.title = _data["title"];
+            this.author = _data["author"];
+            this.imageUrl = _data["imageUrl"];
+            this.summary = _data["summary"];
+            this.price = _data["price"];
+        }
+    }
+
+    static fromJS(data: any): CreateBookDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateBookDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["bookId"] = this.bookId;
+        data["title"] = this.title;
+        data["author"] = this.author;
+        data["imageUrl"] = this.imageUrl;
+        data["summary"] = this.summary;
+        data["price"] = this.price;
+        return data;
+    }
+}
+
+export interface ICreateBookDTO {
+    bookId?: number;
+    title?: string | undefined;
+    author?: string | undefined;
+    imageUrl?: string | undefined;
+    summary?: string | undefined;
+    price?: number | undefined;
 }
 
 export class CreateCartItemDTO implements ICreateCartItemDTO {
