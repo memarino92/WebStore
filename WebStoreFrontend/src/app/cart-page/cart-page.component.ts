@@ -3,6 +3,7 @@ import {
   BookDTO,
   ServiceProxy,
 } from 'src/shared/service-proxies/service-proxies'
+import { CartService } from '../cart.service'
 
 @Component({
   selector: 'app-cart-page',
@@ -12,7 +13,10 @@ import {
 })
 export class CartPageComponent implements OnInit {
   cartItems!: BookDTO[]
-  constructor(private serviceProxy: ServiceProxy) {}
+  constructor(
+    private serviceProxy: ServiceProxy,
+    public cartService: CartService
+  ) {}
 
   ngOnInit(): void {
     this.getCartItems()
@@ -22,11 +26,12 @@ export class CartPageComponent implements OnInit {
     this.serviceProxy.cartItemsAll().subscribe((result) => {
       console.log(result)
       this.cartItems = result
+      this.cartService.updateCartItems(result)
     })
   }
 
   calculateTotal() {
-    return this.cartItems.reduce(
+    return this.cartItems?.reduce(
       (prev, cur) => (cur.price ? (prev += cur.price) : prev),
       0
     )
