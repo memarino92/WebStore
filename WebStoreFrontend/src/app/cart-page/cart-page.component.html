@@ -1,0 +1,15 @@
+<!-- Navbar -->
+<app-navbar></app-navbar>
+
+<!-- Nav Links -->
+<app-nav-links></app-nav-links>
+
+<!-- Cart Items -->
+<div class="flex w-full flex-wrap items-center justify-center p-20">
+  <p>Your cart:</p>
+  <app-books-table [books]="cartItems"></app-books-table>
+  <p>Total: ${{ calculateTotal() }}</p>
+</div>
+
+<!-- Footer -->
+<app-footer></app-footer>

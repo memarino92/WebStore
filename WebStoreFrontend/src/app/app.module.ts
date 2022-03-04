@@ -30,6 +30,7 @@ import { BookInfoFormComponent } from 'src/app/book-info-form/book-info-form.com
 import { UsersTableComponent } from './users-table/users-table.component'
 import { UserRowComponent } from './user-row/user-row.component'
 import { UserInfoFormComponent } from './user-info-form/user-info-form.component'
+import { CartPageComponent } from './cart-page/cart-page.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'admin', component: AdminPageComponent },
   { path: 'auth', component: AuthTestComponent },
   { path: 'form', component: UserInfoFormComponent },
+  { path: 'cart', component: CartPageComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
 
@@ -63,6 +65,7 @@ const routes: Routes = [
     UsersTableComponent,
     UserRowComponent,
     UserInfoFormComponent,
+    CartPageComponent,
   ],
   imports: [
     BrowserModule,

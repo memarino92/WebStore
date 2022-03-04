@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WebStoreAPI;
 
 namespace WebStoreAPI
 {
@@ -9,6 +10,12 @@ namespace WebStoreAPI
         public DbSet<Book> Book { get; set; }
         public DbSet<User> User { get; set; }
 
+        public DbSet<Cart> Cart { get; set; }
+
+        public DbSet<CartItem> CartItem { get; set; }
+
+
+
         public string DbPath { get; }
 
         public WebStoreContext(DbContextOptions<WebStoreContext> options)
@@ -16,5 +23,6 @@ namespace WebStoreAPI
         {
             DbPath = "Data Source=localhost;Initial Catalog=master;User ID=sa;Password=Pass@word1";
         }
+
     }
 }

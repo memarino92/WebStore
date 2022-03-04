@@ -3,7 +3,9 @@ import { CloudinaryImage } from '@cloudinary/url-gen/assets/CloudinaryImage'
 import { Cloudinary } from '@cloudinary/url-gen'
 import { thumbnail } from '@cloudinary/url-gen/actions/resize'
 import { imageNameFromUrl } from 'src/shared/utils/utils'
-import { Book } from 'src/shared/service-proxies/service-proxies'
+import { Book, CartItem } from 'src/shared/service-proxies/service-proxies'
+import { OidcSecurityService } from 'angular-auth-oidc-client'
+import { ServiceProxy } from 'src/shared/service-proxies/service-proxies'
 
 const FALLBACK_IMAGE_URL = `https://res.cloudinary.com/mmarino/image/upload/v1644550847/SimpleBook_h6isa6.svg`
 
@@ -17,7 +19,10 @@ export class BookCardComponent implements OnInit {
 
   img!: CloudinaryImage
 
-  constructor() {}
+  constructor(
+    private oidcSecurityService: OidcSecurityService,
+    private serviceProxy: ServiceProxy
+  ) {}
 
   ngOnInit(): void {
     const bookImageUrl = this.book.imageUrl
@@ -28,5 +33,13 @@ export class BookCardComponent implements OnInit {
     this.img = myCld
       .image(imageNameFromUrl(bookImageUrl))
       .resize(thumbnail().width(130).height(160))
+  }
+
+  addBookToCart() {
+    this.serviceProxy
+      .cartItemsPOST(new CartItem({ bookId: this.book.bookId, cartId: 1 }))
+      .subscribe((result) => {
+        console.log(`Cart item:`, result)
+      })
   }
 }
