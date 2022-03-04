@@ -3,7 +3,10 @@ import { CloudinaryImage } from '@cloudinary/url-gen/assets/CloudinaryImage'
 import { Cloudinary } from '@cloudinary/url-gen'
 import { thumbnail } from '@cloudinary/url-gen/actions/resize'
 import { imageNameFromUrl } from 'src/shared/utils/utils'
-import { Book, CartItem } from 'src/shared/service-proxies/service-proxies'
+import {
+  Book,
+  CreateCartItemDTO,
+} from 'src/shared/service-proxies/service-proxies'
 import { OidcSecurityService } from 'angular-auth-oidc-client'
 import { ServiceProxy } from 'src/shared/service-proxies/service-proxies'
 
@@ -37,7 +40,12 @@ export class BookCardComponent implements OnInit {
 
   addBookToCart() {
     this.serviceProxy
-      .cartItemsPOST(new CartItem({ bookId: this.book.bookId, cartId: 1 }))
+      .addItemToCart(
+        new CreateCartItemDTO({
+          bookId: this.book.bookId,
+          username: this.oidcSecurityService.getUserData().preferred_username,
+        })
+      )
       .subscribe((result) => {
         console.log(`Cart item:`, result)
       })

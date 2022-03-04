@@ -141,10 +141,15 @@ export class ServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
      * @return Success
      */
-    cartItemsAll(): Observable<BookDTO[]> {
-        let url_ = this.baseUrl + "/api/CartItems";
+    cartItemsAll(userId: string | undefined): Observable<BookDTO[]> {
+        let url_ = this.baseUrl + "/api/CartItems?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -202,7 +207,7 @@ export class ServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    cartItemsPOST(body: CreateCartItemDTO | undefined): Observable<CartItem> {
+    addItemToCart(body: CreateCartItemDTO | undefined): Observable<BookDTO> {
         let url_ = this.baseUrl + "/api/CartItems";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -219,20 +224,20 @@ export class ServiceProxy {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCartItemsPOST(response_);
+            return this.processAddItemToCart(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCartItemsPOST(response_ as any);
+                    return this.processAddItemToCart(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<CartItem>;
+                    return _observableThrow(e) as any as Observable<BookDTO>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<CartItem>;
+                return _observableThrow(response_) as any as Observable<BookDTO>;
         }));
     }
 
-    protected processCartItemsPOST(response: HttpResponseBase): Observable<CartItem> {
+    protected processAddItemToCart(response: HttpResponseBase): Observable<BookDTO> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -243,7 +248,7 @@ export class ServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CartItem.fromJS(resultData200);
+            result200 = BookDTO.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -251,7 +256,7 @@ export class ServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<CartItem>(null as any);
+        return _observableOf<BookDTO>(null as any);
     }
 
     /**
@@ -871,7 +876,7 @@ export class Book implements IBook {
     author?: string | undefined;
     imageUrl?: string | undefined;
     summary?: string | undefined;
-    price?: number;
+    price?: number | undefined;
     items?: CartItem[] | undefined;
 
     constructor(data?: IBook) {
@@ -932,7 +937,7 @@ export interface IBook {
     author?: string | undefined;
     imageUrl?: string | undefined;
     summary?: string | undefined;
-    price?: number;
+    price?: number | undefined;
     items?: CartItem[] | undefined;
 }
 
@@ -941,7 +946,7 @@ export class BookDTO implements IBookDTO {
     title?: string | undefined;
     author?: string | undefined;
     imageUrl?: string | undefined;
-    price?: number;
+    price?: number | undefined;
 
     constructor(data?: IBookDTO) {
         if (data) {
@@ -985,7 +990,7 @@ export interface IBookDTO {
     title?: string | undefined;
     author?: string | undefined;
     imageUrl?: string | undefined;
-    price?: number;
+    price?: number | undefined;
 }
 
 export class Cart implements ICart {
@@ -1109,8 +1114,8 @@ export interface ICartItem {
 }
 
 export class CreateCartItemDTO implements ICreateCartItemDTO {
-    cartId?: number;
     bookId?: number;
+    username?: string | undefined;
 
     constructor(data?: ICreateCartItemDTO) {
         if (data) {
@@ -1123,8 +1128,8 @@ export class CreateCartItemDTO implements ICreateCartItemDTO {
 
     init(_data?: any) {
         if (_data) {
-            this.cartId = _data["cartId"];
             this.bookId = _data["bookId"];
+            this.username = _data["username"];
         }
     }
 
@@ -1137,15 +1142,15 @@ export class CreateCartItemDTO implements ICreateCartItemDTO {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["cartId"] = this.cartId;
         data["bookId"] = this.bookId;
+        data["username"] = this.username;
         return data;
     }
 }
 
 export interface ICreateCartItemDTO {
-    cartId?: number;
     bookId?: number;
+    username?: string | undefined;
 }
 
 export class CreateUserDTO implements ICreateUserDTO {

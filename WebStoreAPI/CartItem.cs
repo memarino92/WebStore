@@ -16,8 +16,7 @@
 
     public class CreateCartItemDTO
     {
-        public int CartId { get; set; }
-
         public int BookId { get; set; }
+        public string Username { get; set; }
     }
 }
