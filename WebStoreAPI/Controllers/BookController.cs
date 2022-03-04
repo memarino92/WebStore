@@ -26,10 +26,18 @@ namespace WebStoreAPI.Controllers
         }
 
         [HttpPost(Name = "CreateBook")]
-        public Book CreateBook([FromBody]Book book)
+        public Book CreateBook([FromBody] CreateBookDTO book)
         {
-            var newBook = book;
-            newBook.CreatedAt = DateTime.Now;
+            var newBook = new Book
+            {
+                Author = book.Author,
+                CreatedAt = DateTime.Now,
+                Title = book.Title,
+                Price = book.Price,
+                ImageUrl = book.ImageUrl,
+                Summary = book.Summary
+            };
+            
             _webStoreContext.Book.Add(newBook);
             _webStoreContext.SaveChanges();
             return newBook;

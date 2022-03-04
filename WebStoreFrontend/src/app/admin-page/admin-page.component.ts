@@ -5,6 +5,7 @@ import {
   Book,
   User,
   CreateUserDTO,
+  CreateBookDTO,
 } from '../../shared/service-proxies/service-proxies'
 
 @Component({
@@ -34,7 +35,7 @@ export class AdminPageComponent implements OnInit {
   }
 
   createBook(book: Book) {
-    let newBook = new Book(book)
+    let newBook = new CreateBookDTO(book)
 
     this._service.createBook(newBook).subscribe((result) => {
       console.log(result)
