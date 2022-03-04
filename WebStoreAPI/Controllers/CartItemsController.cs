@@ -28,9 +28,27 @@ namespace WebStoreAPI.Controllers
 
         // GET: api/CartItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDTO>>> GetCartItem()
+        public async Task<ActionResult<IEnumerable<BookDTO>>> GetCartItemsForUser(string userId)
         {
-            var cartItems = _context.CartItem.ToList();
+            var user = await _userManager.FindByNameAsync(userId);
+            if (user == null)
+            { return BadRequest(); }
+
+            var cart = await _context.Cart.Where(cart => cart.UserId == user.Id && cart.IsActive == true).FirstOrDefaultAsync();
+            if (cart == null)
+            {
+                var newCart = new Cart
+                {
+                    UserId = user.Id,
+                    CreatedAt = DateTime.Now,
+                    IsActive = true
+                };
+                _context.Cart.Add(newCart);
+                await _context.SaveChangesAsync();
+                cart = newCart;
+            }
+
+            var cartItems = await _context.CartItem.Where(item => item.CartId == cart.CartId).ToListAsync();
             List<int> bookIds = cartItems.Select(cartItem => cartItem.BookId).ToList();
             var books = await _context.Book.Where(book => bookIds.Contains(book.BookId)).ToListAsync();
             var actualBooks = bookIds.Select(bookId => books.Find(book => book.BookId == bookId));
@@ -86,8 +104,8 @@ namespace WebStoreAPI.Controllers
 
         // POST: api/CartItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<BookDTO>> PostCartItem(CreateCartItemDTO cartItem)
+        [HttpPost(Name ="AddItemToCart")]
+        public async Task<ActionResult<BookDTO>> AddItemToCart(CreateCartItemDTO cartItem)
         {
             var user = await _userManager.FindByNameAsync(cartItem.Username);
             if (user == null)
@@ -126,7 +144,7 @@ namespace WebStoreAPI.Controllers
             var book = await _context.Book.FindAsync(cartItem.BookId);
             var bookAddedToCart = new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.Price };
 
-            return CreatedAtAction("GetCartItem", bookAddedToCart);
+            return Ok(bookAddedToCart);
         }
 
         // DELETE: api/CartItems/5

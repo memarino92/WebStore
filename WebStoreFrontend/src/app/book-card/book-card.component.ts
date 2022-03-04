@@ -40,7 +40,7 @@ export class BookCardComponent implements OnInit {
 
   addBookToCart() {
     this.serviceProxy
-      .cartItemsPOST(
+      .addItemToCart(
         new CreateCartItemDTO({
           bookId: this.book.bookId,
           username: this.oidcSecurityService.getUserData().preferred_username,
