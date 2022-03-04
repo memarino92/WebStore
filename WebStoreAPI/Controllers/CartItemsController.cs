@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebStoreAPI;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebStoreAPI.Controllers
 {
@@ -16,10 +17,13 @@ namespace WebStoreAPI.Controllers
     public class CartItemsController : ControllerBase
     {
         private readonly WebStoreContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public CartItemsController(WebStoreContext context)
+        public CartItemsController(WebStoreContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
+
         }
 
         // GET: api/CartItems
@@ -83,14 +87,32 @@ namespace WebStoreAPI.Controllers
         // POST: api/CartItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CartItem>> PostCartItem(CreateCartItemDTO cartItem)
+        public async Task<ActionResult<BookDTO>> PostCartItem(CreateCartItemDTO cartItem)
         {
+            var user = await _userManager.FindByNameAsync(cartItem.Username);
+            if (user == null)
+            { return BadRequest(); }
+            
+            var cart = await _context.Cart.Where(cart => cart.UserId == user.Id && cart.IsActive == true).FirstOrDefaultAsync();
+            if (cart == null)
+            {
+                var newCart = new Cart
+                {
+                    UserId = user.Id,
+                    CreatedAt = DateTime.Now,
+                    IsActive = true
+                };
+                _context.Cart.Add(newCart);
+                await _context.SaveChangesAsync();
+                cart = newCart;
+            }
+
             var newCartItem = new CartItem
             {
                 CartItemId = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.Now,
                 BookId = cartItem.BookId, 
-                CartId = cartItem.CartId
+                CartId = cart.CartId
             };
             _context.CartItem.Add(newCartItem);
             try
@@ -98,11 +120,13 @@ namespace WebStoreAPI.Controllers
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
-            {   
+            {
                 throw;
             }
+            var book = await _context.Book.FindAsync(cartItem.BookId);
+            var bookAddedToCart = new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.Price };
 
-            return CreatedAtAction("GetCartItem", newCartItem);
+            return CreatedAtAction("GetCartItem", bookAddedToCart);
         }
 
         // DELETE: api/CartItems/5

@@ -871,7 +871,7 @@ export class Book implements IBook {
     author?: string | undefined;
     imageUrl?: string | undefined;
     summary?: string | undefined;
-    price?: number;
+    price?: number | undefined;
     items?: CartItem[] | undefined;
 
     constructor(data?: IBook) {
@@ -932,7 +932,7 @@ export interface IBook {
     author?: string | undefined;
     imageUrl?: string | undefined;
     summary?: string | undefined;
-    price?: number;
+    price?: number | undefined;
     items?: CartItem[] | undefined;
 }
 
@@ -941,7 +941,7 @@ export class BookDTO implements IBookDTO {
     title?: string | undefined;
     author?: string | undefined;
     imageUrl?: string | undefined;
-    price?: number;
+    price?: number | undefined;
 
     constructor(data?: IBookDTO) {
         if (data) {
@@ -985,7 +985,7 @@ export interface IBookDTO {
     title?: string | undefined;
     author?: string | undefined;
     imageUrl?: string | undefined;
-    price?: number;
+    price?: number | undefined;
 }
 
 export class Cart implements ICart {
@@ -1109,8 +1109,8 @@ export interface ICartItem {
 }
 
 export class CreateCartItemDTO implements ICreateCartItemDTO {
-    cartId?: number;
     bookId?: number;
+    username?: string | undefined;
 
     constructor(data?: ICreateCartItemDTO) {
         if (data) {
@@ -1123,8 +1123,8 @@ export class CreateCartItemDTO implements ICreateCartItemDTO {
 
     init(_data?: any) {
         if (_data) {
-            this.cartId = _data["cartId"];
             this.bookId = _data["bookId"];
+            this.username = _data["username"];
         }
     }
 
@@ -1137,15 +1137,15 @@ export class CreateCartItemDTO implements ICreateCartItemDTO {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["cartId"] = this.cartId;
         data["bookId"] = this.bookId;
+        data["username"] = this.username;
         return data;
     }
 }
 
 export interface ICreateCartItemDTO {
-    cartId?: number;
     bookId?: number;
+    username?: string | undefined;
 }
 
 export class CreateUserDTO implements ICreateUserDTO {
