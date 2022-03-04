@@ -143,7 +143,7 @@ export class ServiceProxy {
     /**
      * @return Success
      */
-    cartItemsAll(): Observable<CartItem[]> {
+    cartItemsAll(): Observable<BookDTO[]> {
         let url_ = this.baseUrl + "/api/CartItems";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -162,14 +162,14 @@ export class ServiceProxy {
                 try {
                     return this.processCartItemsAll(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<CartItem[]>;
+                    return _observableThrow(e) as any as Observable<BookDTO[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<CartItem[]>;
+                return _observableThrow(response_) as any as Observable<BookDTO[]>;
         }));
     }
 
-    protected processCartItemsAll(response: HttpResponseBase): Observable<CartItem[]> {
+    protected processCartItemsAll(response: HttpResponseBase): Observable<BookDTO[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -183,7 +183,7 @@ export class ServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(CartItem.fromJS(item));
+                    result200!.push(BookDTO.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -195,14 +195,14 @@ export class ServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<CartItem[]>(null as any);
+        return _observableOf<BookDTO[]>(null as any);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    cartItemsPOST(body: CartItem | undefined): Observable<CartItem> {
+    cartItemsPOST(body: CreateCartItemDTO | undefined): Observable<CartItem> {
         let url_ = this.baseUrl + "/api/CartItems";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -871,7 +871,7 @@ export class Book implements IBook {
     author?: string | undefined;
     imageUrl?: string | undefined;
     summary?: string | undefined;
-    price?: number | undefined;
+    price?: number;
     items?: CartItem[] | undefined;
 
     constructor(data?: IBook) {
@@ -932,8 +932,60 @@ export interface IBook {
     author?: string | undefined;
     imageUrl?: string | undefined;
     summary?: string | undefined;
-    price?: number | undefined;
+    price?: number;
     items?: CartItem[] | undefined;
+}
+
+export class BookDTO implements IBookDTO {
+    bookId?: number;
+    title?: string | undefined;
+    author?: string | undefined;
+    imageUrl?: string | undefined;
+    price?: number;
+
+    constructor(data?: IBookDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.bookId = _data["bookId"];
+            this.title = _data["title"];
+            this.author = _data["author"];
+            this.imageUrl = _data["imageUrl"];
+            this.price = _data["price"];
+        }
+    }
+
+    static fromJS(data: any): BookDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new BookDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["bookId"] = this.bookId;
+        data["title"] = this.title;
+        data["author"] = this.author;
+        data["imageUrl"] = this.imageUrl;
+        data["price"] = this.price;
+        return data;
+    }
+}
+
+export interface IBookDTO {
+    bookId?: number;
+    title?: string | undefined;
+    author?: string | undefined;
+    imageUrl?: string | undefined;
+    price?: number;
 }
 
 export class Cart implements ICart {
@@ -1054,6 +1106,46 @@ export interface ICartItem {
     book?: Book;
     cartId?: number;
     cart?: Cart;
+}
+
+export class CreateCartItemDTO implements ICreateCartItemDTO {
+    cartId?: number;
+    bookId?: number;
+
+    constructor(data?: ICreateCartItemDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.cartId = _data["cartId"];
+            this.bookId = _data["bookId"];
+        }
+    }
+
+    static fromJS(data: any): CreateCartItemDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCartItemDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["cartId"] = this.cartId;
+        data["bookId"] = this.bookId;
+        return data;
+    }
+}
+
+export interface ICreateCartItemDTO {
+    cartId?: number;
+    bookId?: number;
 }
 
 export class CreateUserDTO implements ICreateUserDTO {

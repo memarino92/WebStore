@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebStoreAPI;
+using System.Linq;
 
 namespace WebStoreAPI.Controllers
 {
@@ -23,9 +24,15 @@ namespace WebStoreAPI.Controllers
 
         // GET: api/CartItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartItem>>> GetCartItem()
+        public async Task<ActionResult<IEnumerable<BookDTO>>> GetCartItem()
         {
-            return await _context.CartItem.ToListAsync();
+            var cartItems = _context.CartItem.ToList();
+            List<int> bookIds = cartItems.Select(cartItem => cartItem.BookId).ToList();
+            var books = await _context.Book.Where(book => bookIds.Contains(book.BookId)).ToListAsync();
+            var actualBooks = bookIds.Select(bookId => books.Find(book => book.BookId == bookId));
+            var response = actualBooks.Select(book => new BookDTO { BookId = book.BookId,Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.Price});
+
+            return Ok(response);
         }
 
         // GET: api/CartItems/5
