@@ -29,7 +29,7 @@ namespace WebStoreAPI.Controllers
             _webStoreContext = context;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet(Name = "getAllUsers")]
         public IEnumerable<User> Get()
         {
