@@ -21,15 +21,20 @@ export class AppComponent implements OnInit {
     public cartService: CartService
   ) {}
   ngOnInit(): void {
+    this.securityService
+      .checkAuth()
+      .subscribe(({ isAuthenticated, userData }) => {})
     this.getCartItems()
   }
 
   getCartItems() {
-    this.serviceProxy
-      .cartItemsAll(this.securityService.getUserData().preferred_username)
-      .subscribe((result) => {
-        this.cartItems = result
-        this.cartService.updateCartItems(result)
-      })
+    const username = this.securityService.getUserData()?.preferred_username
+
+    if (!username) return
+
+    this.serviceProxy.cartItemsAll(username).subscribe((result) => {
+      this.cartItems = result
+      this.cartService.updateCartItems(result)
+    })
   }
 }

@@ -10,12 +10,9 @@ export class AuthTestComponent implements OnInit {
   constructor(public oidcSecurityService: OidcSecurityService) {}
 
   ngOnInit(): void {
-    this.oidcSecurityService
-      .checkAuth()
-      .subscribe(({ isAuthenticated, userData }) => {
-        console.log('is authenticated', isAuthenticated)
-        console.log('userData', userData)
-      })
+    // this.oidcSecurityService
+    //   .checkAuth()
+    //   .subscribe(({ isAuthenticated, userData }) => {})
   }
 
   login() {

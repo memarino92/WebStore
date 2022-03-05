@@ -5,6 +5,7 @@ namespace WebStoreAPI
     public class User : IdentityUser
     {
         public List<Cart> Carts { get; set; }
+        public List<Order> Orders { get; set; }
     }
 
     public class CreateUserDTO

@@ -692,6 +692,279 @@ export class ServiceProxy {
     }
 
     /**
+     * @return Success
+     */
+    ordersAll(): Observable<Order[]> {
+        let url_ = this.baseUrl + "/api/Orders";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOrdersAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOrdersAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Order[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Order[]>;
+        }));
+    }
+
+    protected processOrdersAll(response: HttpResponseBase): Observable<Order[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Order.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Order[]>(null as any);
+    }
+
+    /**
+     * @param username (optional) 
+     * @return Success
+     */
+    ordersPOST(username: string | undefined): Observable<OkResult> {
+        let url_ = this.baseUrl + "/api/Orders?";
+        if (username === null)
+            throw new Error("The parameter 'username' cannot be null.");
+        else if (username !== undefined)
+            url_ += "username=" + encodeURIComponent("" + username) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOrdersPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOrdersPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<OkResult>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<OkResult>;
+        }));
+    }
+
+    protected processOrdersPOST(response: HttpResponseBase): Observable<OkResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = OkResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<OkResult>(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    ordersGET(id: number): Observable<Order> {
+        let url_ = this.baseUrl + "/api/Orders/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOrdersGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOrdersGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Order>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Order>;
+        }));
+    }
+
+    protected processOrdersGET(response: HttpResponseBase): Observable<Order> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Order.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Order>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    ordersPUT(id: number, body: Order | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Orders/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOrdersPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOrdersPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processOrdersPUT(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    ordersDELETE(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/Orders/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOrdersDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOrdersDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processOrdersDELETE(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
      * @param searchParams (optional) 
      * @return Success
      */
@@ -1253,6 +1526,154 @@ export interface ICreateUserDTO {
     email?: string | undefined;
 }
 
+export class OkResult implements IOkResult {
+    statusCode?: number;
+
+    constructor(data?: IOkResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.statusCode = _data["statusCode"];
+        }
+    }
+
+    static fromJS(data: any): OkResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new OkResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["statusCode"] = this.statusCode;
+        return data;
+    }
+}
+
+export interface IOkResult {
+    statusCode?: number;
+}
+
+export class Order implements IOrder {
+    orderId?: number;
+    createdAt?: Date;
+    userId?: string | undefined;
+    user?: User;
+    items?: OrderItem[] | undefined;
+
+    constructor(data?: IOrder) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderId = _data["orderId"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(OrderItem.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Order {
+        data = typeof data === 'object' ? data : {};
+        let result = new Order();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderId"] = this.orderId;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IOrder {
+    orderId?: number;
+    createdAt?: Date;
+    userId?: string | undefined;
+    user?: User;
+    items?: OrderItem[] | undefined;
+}
+
+export class OrderItem implements IOrderItem {
+    orderItemId?: number;
+    bookId?: number;
+    book?: Book;
+    orderId?: number;
+    order?: Order;
+
+    constructor(data?: IOrderItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderItemId = _data["orderItemId"];
+            this.bookId = _data["bookId"];
+            this.book = _data["book"] ? Book.fromJS(_data["book"]) : <any>undefined;
+            this.orderId = _data["orderId"];
+            this.order = _data["order"] ? Order.fromJS(_data["order"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): OrderItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderItemId"] = this.orderItemId;
+        data["bookId"] = this.bookId;
+        data["book"] = this.book ? this.book.toJSON() : <any>undefined;
+        data["orderId"] = this.orderId;
+        data["order"] = this.order ? this.order.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IOrderItem {
+    orderItemId?: number;
+    bookId?: number;
+    book?: Book;
+    orderId?: number;
+    order?: Order;
+}
+
 export class User implements IUser {
     id?: string | undefined;
     userName?: string | undefined;
@@ -1270,6 +1691,7 @@ export class User implements IUser {
     lockoutEnabled?: boolean;
     accessFailedCount?: number;
     carts?: Cart[] | undefined;
+    orders?: Order[] | undefined;
 
     constructor(data?: IUser) {
         if (data) {
@@ -1301,6 +1723,11 @@ export class User implements IUser {
                 this.carts = [] as any;
                 for (let item of _data["carts"])
                     this.carts!.push(Cart.fromJS(item));
+            }
+            if (Array.isArray(_data["orders"])) {
+                this.orders = [] as any;
+                for (let item of _data["orders"])
+                    this.orders!.push(Order.fromJS(item));
             }
         }
     }
@@ -1334,6 +1761,11 @@ export class User implements IUser {
             for (let item of this.carts)
                 data["carts"].push(item.toJSON());
         }
+        if (Array.isArray(this.orders)) {
+            data["orders"] = [];
+            for (let item of this.orders)
+                data["orders"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -1355,6 +1787,7 @@ export interface IUser {
     lockoutEnabled?: boolean;
     accessFailedCount?: number;
     carts?: Cart[] | undefined;
+    orders?: Order[] | undefined;
 }
 
 export class ApiException extends Error {

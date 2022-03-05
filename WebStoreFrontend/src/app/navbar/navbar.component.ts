@@ -28,8 +28,6 @@ export class NavbarComponent implements OnInit {
     this.oidcSecurityService
       .checkAuth()
       .subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {
-        console.log('is authenticated', isAuthenticated)
-        console.log('userData', userData)
         this.userData = userData
         this.userIsAuthenticated = isAuthenticated
       })

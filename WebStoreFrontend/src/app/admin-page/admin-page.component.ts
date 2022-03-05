@@ -37,9 +37,7 @@ export class AdminPageComponent implements OnInit {
   createBook(book: Book) {
     let newBook = new CreateBookDTO(book)
 
-    this._service.createBook(newBook).subscribe((result) => {
-      console.log(result)
-    })
+    this._service.createBook(newBook).subscribe()
   }
 
   saveChanges() {
@@ -51,9 +49,6 @@ export class AdminPageComponent implements OnInit {
   }
 
   createUser(data: CreateUserDTO) {
-    console.log(data)
-    this._service.createUser(data).subscribe((response) => {
-      console.log(response)
-    })
+    this._service.createUser(data).subscribe()
   }
 }
