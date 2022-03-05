@@ -25,13 +25,13 @@ export class CartPageComponent implements OnInit {
   }
 
   getCartItems() {
-    this.serviceProxy
-      .cartItemsAll(this.securityService.getUserData().preferred_username)
-      .subscribe((result) => {
-        console.log(result)
-        this.cartItems = result
-        this.cartService.updateCartItems(result)
-      })
+    const username = this.securityService.getUserData()?.preferred_username
+    if (!username) return
+
+    this.serviceProxy.cartItemsAll(username).subscribe((result) => {
+      this.cartItems = result
+      this.cartService.updateCartItems(result)
+    })
   }
 
   calculateTotal() {
@@ -39,5 +39,12 @@ export class CartPageComponent implements OnInit {
       (prev, cur) => (cur.price ? (prev += cur.price) : prev),
       0
     )
+  }
+
+  createOrder() {
+    const username = this.securityService.getUserData()?.preferred_username
+    if (!username) return
+
+    this.serviceProxy.ordersPOST(username).subscribe()
   }
 }

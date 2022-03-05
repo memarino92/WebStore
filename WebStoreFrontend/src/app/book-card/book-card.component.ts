@@ -39,15 +39,17 @@ export class BookCardComponent implements OnInit {
   }
 
   addBookToCart() {
+    const username = this.oidcSecurityService.getUserData()?.preferred_username
+
+    if (!username) return
+
     this.serviceProxy
       .addItemToCart(
         new CreateCartItemDTO({
           bookId: this.book.bookId,
-          username: this.oidcSecurityService.getUserData().preferred_username,
+          username: username,
         })
       )
-      .subscribe((result) => {
-        console.log(`Cart item:`, result)
-      })
+      .subscribe()
   }
 }
