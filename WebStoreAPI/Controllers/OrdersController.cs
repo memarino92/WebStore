@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System;
+using System.Threading.Tasks;
 using WebStoreAPI;
 
 namespace WebStoreAPI.Controllers
@@ -111,6 +115,19 @@ namespace WebStoreAPI.Controllers
             cart.IsActive = false;
 
             await _context.SaveChangesAsync();
+           
+            // Send email using SendGridAPI
+            var apiKey = DotNetEnv.Env.GetString("SENDGRID_API_KEY");
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("no-reply@michaelmarino.dev", "Web Store");
+            var subject = $"Web Store Order #{newOrder.OrderId}";
+            var to = new EmailAddress(DotNetEnv.Env.GetString("FALLBACK_EMAIL"), DotNetEnv.Env.GetString("FALLBACK_EMAIL_NAME"));
+            var plainTextContent =
+                $"Order Number: {newOrder.OrderId}";
+            var htmlContent =
+                $"<strong>Order Number: { newOrder.OrderId } </strong>";
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
 
             var newOrderDTO = new OrderDTO { OrderId = newOrder.OrderId };
 

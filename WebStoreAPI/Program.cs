@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using DotNetEnv;
 using WebStoreAPI;
+
+Env.Load();
+Env.TraversePath().Load();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -11,7 +15,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       builder =>
                       {
-                          builder.WithOrigins("https://localhost:4200")
+                          builder.WithOrigins(Env.GetString("ALLOWED_ORIGINS"))
                                                   .AllowAnyHeader()
                                                   .AllowAnyMethod();
                       });
@@ -23,7 +27,7 @@ builder.Services.AddControllers();
 
 // Add EF Core config
 builder.Services.AddDbContext<WebStoreContext>(
-    options => options.UseSqlServer("Data Source=localhost;Initial Catalog=master;User ID=sa;Password=Pass@word1"));
+    options => options.UseSqlServer(Env.GetString("SQL_SERVER_CONNECTION_STRING")));
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<WebStoreContext>()
