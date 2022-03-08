@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Reflection;
+using DotNetEnv;
 
 namespace IdentityServer;
 
@@ -16,7 +17,7 @@ internal static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
-        var connectionString = "Data Source=localhost;Initial Catalog=master;User ID=sa;Password=Pass@word1";
+        var connectionString = Env.GetString("SQL_SERVER_CONNECTION_STRING");
 
         builder.Services.AddRazorPages();
 

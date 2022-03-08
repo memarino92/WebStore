@@ -20,7 +20,7 @@ namespace WebStoreAPI
         public WebStoreContext(DbContextOptions<WebStoreContext> options)
             : base(options)
         {
-            DbPath = "Data Source=localhost;Initial Catalog=master;User ID=sa;Password=Pass@word1";
+            DbPath = "Data Source = michaels - web - store.database.windows.net; Initial Catalog = webstore; Persist Security Info = True; User ID = ONuSDESpL9D91LFDe68C; Password = K37X6dZO1gppveySEGO1";
         }
 
     }

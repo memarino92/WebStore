@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_BASE_URL: 'https://localhost:7110',
+  API_BASE_URL: process.env.NG_APP_API_BASE_URL,
 }
 
 /*
