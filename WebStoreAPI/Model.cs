@@ -20,7 +20,7 @@ namespace WebStoreAPI
         public WebStoreContext(DbContextOptions<WebStoreContext> options)
             : base(options)
         {
-            DbPath = "Data Source=localhost;Initial Catalog=master;User ID=sa;Password=Pass@word1";
+            DbPath = ***REMOVED***;
         }
 
     }

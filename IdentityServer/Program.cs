@@ -1,5 +1,9 @@
 ﻿using IdentityServer;
 using Serilog;
+using DotNetEnv;
+
+Env.Load();
+Env.TraversePath().Load();
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
