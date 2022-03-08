@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using DotNetEnv;
 using WebStoreAPI;
 
 namespace WebStoreAPI
@@ -20,7 +21,7 @@ namespace WebStoreAPI
         public WebStoreContext(DbContextOptions<WebStoreContext> options)
             : base(options)
         {
-            DbPath = ***REMOVED***;
+            DbPath = Env.GetString("SQL_SERVER_CONNECTION_STRING");
         }
 
     }
