@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer;
+﻿using DotNetEnv;
+using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 
 namespace IdentityServer;
@@ -25,18 +26,17 @@ public static class Config
             // JavaScript BFF client
             new Client
             {
-                ClientId = "bff",
-                ClientSecrets = { new Secret("secret".Sha256()) },
+                ClientId = "webstore",
 
                 AllowedGrantTypes = GrantTypes.Code,
     
                 // where to redirect to after login
-                RedirectUris = { "https://localhost:4200/auth" },
+                RedirectUris = { Env.GetString("REDIRECT_URIS") },
 
                 // where to redirect to after logout
-                PostLogoutRedirectUris = { "https://localhost:4200/auth" },
+                PostLogoutRedirectUris = { Env.GetString("POST_LOGOUT_REDIRECT_URIS") },
 
-                AllowedCorsOrigins = { "https://localhost:4200"},
+                AllowedCorsOrigins = { Env.GetString("ALLOWED_CORS_ORIGINS") },
 
                 AllowedScopes = new List<string>
                 {
