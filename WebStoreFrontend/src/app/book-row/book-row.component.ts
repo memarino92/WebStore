@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { Book } from 'src/shared/service-proxies/service-proxies'
+import { BookDTO } from 'src/shared/service-proxies/service-proxies'
 import { CloudinaryImage } from '@cloudinary/url-gen/assets/CloudinaryImage'
 import { Cloudinary } from '@cloudinary/url-gen'
 import { thumbnail } from '@cloudinary/url-gen/actions/resize'
@@ -15,7 +15,7 @@ const FALLBACK_IMAGE_URL = `https://res.cloudinary.com/mmarino/image/upload/v164
   styleUrls: ['./book-row.component.css'],
 })
 export class BookRowComponent implements OnInit {
-  @Input() book!: Book
+  @Input() book!: BookDTO
   @Input() index!: number
 
   img!: CloudinaryImage
