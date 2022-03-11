@@ -121,7 +121,7 @@ namespace WebStoreAPI.Controllers
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("no-reply@michaelmarino.dev", "Web Store");
             var subject = $"Web Store Order #{newOrder.OrderId}";
-            var to = new EmailAddress(DotNetEnv.Env.GetString("FALLBACK_EMAIL"), DotNetEnv.Env.GetString("FALLBACK_EMAIL_NAME"));
+            var to = new EmailAddress(user.Email, user.UserName);
             var plainTextContent =
                 $"Order Number: {newOrder.OrderId}";
             var htmlContent =
