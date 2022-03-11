@@ -928,7 +928,7 @@ export class ServiceProxy {
     /**
      * @return Success
      */
-    getAllUsers(): Observable<User[]> {
+    getAllUsers(): Observable<AdminUserDTO[]> {
         let url_ = this.baseUrl + "/User";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -947,14 +947,14 @@ export class ServiceProxy {
                 try {
                     return this.processGetAllUsers(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<User[]>;
+                    return _observableThrow(e) as any as Observable<AdminUserDTO[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<User[]>;
+                return _observableThrow(response_) as any as Observable<AdminUserDTO[]>;
         }));
     }
 
-    protected processGetAllUsers(response: HttpResponseBase): Observable<User[]> {
+    protected processGetAllUsers(response: HttpResponseBase): Observable<AdminUserDTO[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -968,7 +968,7 @@ export class ServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(User.fromJS(item));
+                    result200!.push(AdminUserDTO.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -980,7 +980,7 @@ export class ServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<User[]>(null as any);
+        return _observableOf<AdminUserDTO[]>(null as any);
     }
 
     /**
@@ -1038,6 +1038,102 @@ export class ServiceProxy {
         }
         return _observableOf<User>(null as any);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateUserPassword(body: UpdateUserPasswordDTO | undefined): Observable<AdminUserDTO> {
+        let url_ = this.baseUrl + "/User";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateUserPassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateUserPassword(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AdminUserDTO>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AdminUserDTO>;
+        }));
+    }
+
+    protected processUpdateUserPassword(response: HttpResponseBase): Observable<AdminUserDTO> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AdminUserDTO.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AdminUserDTO>(null as any);
+    }
+}
+
+export class AdminUserDTO implements IAdminUserDTO {
+    userName?: string | undefined;
+    email?: string | undefined;
+
+    constructor(data?: IAdminUserDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"];
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): AdminUserDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new AdminUserDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName;
+        data["email"] = this.email;
+        return data;
+    }
+}
+
+export interface IAdminUserDTO {
+    userName?: string | undefined;
+    email?: string | undefined;
 }
 
 export class Book implements IBook {
@@ -1578,6 +1674,46 @@ export interface IOrderItem {
     book?: Book;
     orderId?: number;
     order?: Order;
+}
+
+export class UpdateUserPasswordDTO implements IUpdateUserPasswordDTO {
+    userName?: string | undefined;
+    password?: string | undefined;
+
+    constructor(data?: IUpdateUserPasswordDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): UpdateUserPasswordDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateUserPasswordDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName;
+        data["password"] = this.password;
+        return data;
+    }
+}
+
+export interface IUpdateUserPasswordDTO {
+    userName?: string | undefined;
+    password?: string | undefined;
 }
 
 export class User implements IUser {
