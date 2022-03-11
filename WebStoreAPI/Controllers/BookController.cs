@@ -19,9 +19,16 @@ namespace WebStoreAPI.Controllers
         }
 
         [HttpGet(Name = "Books")]
-        public  IEnumerable<Book> Get()
+        public  IEnumerable<BookDTO> Get()
         {
-            var result =  _webStoreContext.Book.Where(x => x.BookId > 0);
+            var result =  _webStoreContext.Book.ToList().Select(book => new BookDTO
+            {
+                Author = book.Author,
+                Title = book.Title,
+                BookId = book.BookId,
+                ImageUrl = book.ImageUrl,
+                Price = book.Cost * (1 + book.Markup / 100)
+            });
             return result;
         }
 
@@ -33,14 +40,46 @@ namespace WebStoreAPI.Controllers
                 Author = book.Author,
                 CreatedAt = DateTime.Now,
                 Title = book.Title,
-                Price = book.Price,
+                Cost = book.Cost,
+                Markup = book.Markup,
                 ImageUrl = book.ImageUrl,
-                Summary = book.Summary
+                Category = book.Category
             };
             
             _webStoreContext.Book.Add(newBook);
             _webStoreContext.SaveChanges();
             return newBook;
+        }
+
+        [HttpGet("/GetBooksForAdmin")]
+        public IEnumerable<CreateBookDTO> GetBooksForAdmin()
+        {
+            var result = _webStoreContext.Book.ToList().Select(book => new CreateBookDTO
+            {
+                Author = book.Author,
+                Title = book.Title,
+                BookId = book.BookId,
+                ImageUrl = book.ImageUrl,
+                Cost = book.Cost,
+                Markup= book.Markup,
+                Category = book.Category
+            });
+            return result;
+        }
+
+        [HttpDelete(Name ="DeleteBook")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+            var book = await _webStoreContext.Book.FindAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            _webStoreContext.Book.Remove(book);
+            await _webStoreContext.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

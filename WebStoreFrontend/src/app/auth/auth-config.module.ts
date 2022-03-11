@@ -9,7 +9,7 @@ import { AuthModule } from 'angular-auth-oidc-client'
         redirectUrl: process.env.NG_APP_REDIRECT_URIS,
         postLogoutRedirectUri: process.env.NG_APP_POST_LOGOUT_REDIRECT_URIS,
         clientId: 'bff',
-        scope: 'openid profile', // 'openid profile offline_access ' + your scopes
+        scope: 'openid profile offline_access', // 'openid profile offline_access ' + your scopes
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,

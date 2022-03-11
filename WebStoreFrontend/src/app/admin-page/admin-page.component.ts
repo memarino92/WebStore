@@ -3,7 +3,7 @@ import { Subject } from 'rxjs'
 import {
   ServiceProxy,
   Book,
-  User,
+  AdminUserDTO,
   CreateUserDTO,
   CreateBookDTO,
 } from '../../shared/service-proxies/service-proxies'
@@ -15,8 +15,8 @@ import {
   providers: [ServiceProxy],
 })
 export class AdminPageComponent implements OnInit {
-  books?: Book[]
-  users?: User[]
+  books?: CreateBookDTO[]
+  users?: AdminUserDTO[]
   saveBookEventSubject: Subject<void> = new Subject<void>()
   saveUserEventSubject: Subject<void> = new Subject<void>()
 
@@ -26,7 +26,7 @@ export class AdminPageComponent implements OnInit {
     this.getBooks()
   }
   getBooks() {
-    this._service.books().subscribe((result) => {
+    this._service.getBooksForAdmin().subscribe((result) => {
       this.books = result
     })
     this._service.getAllUsers().subscribe((result) => {

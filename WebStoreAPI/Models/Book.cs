@@ -11,9 +11,11 @@ namespace WebStoreAPI
         
         public  string? ImageUrl { get; set; }
 
-        public string? Summary { get; set; }
+        public string Category { get; set; }
 
-        public decimal? Price { get; set; }
+        public decimal Cost { get; set; }
+        public decimal Markup { get; set; }
+        
 
         public List<CartItem> Items { get; set; }
     }
@@ -28,7 +30,8 @@ namespace WebStoreAPI
 
         public string? ImageUrl { get; set; }
 
-        public decimal? Price { get; set; }
+
+        public decimal Price { get; set; }
 
     }
     public class CreateBookDTO
@@ -41,9 +44,10 @@ namespace WebStoreAPI
 
         public string? ImageUrl { get; set; }
 
-        public string? Summary { get; set; }
+        public string Category { get; set; }
 
-        public decimal? Price { get; set; }
+        public decimal Cost { get; set; }
+        public decimal Markup { get; set; }
 
     }
 }

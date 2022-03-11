@@ -52,7 +52,7 @@ namespace WebStoreAPI.Controllers
             List<int> bookIds = cartItems.Select(cartItem => cartItem.BookId).ToList();
             var books = await _context.Book.Where(book => bookIds.Contains(book.BookId)).ToListAsync();
             var actualBooks = bookIds.Select(bookId => books.Find(book => book.BookId == bookId));
-            var response = actualBooks.Select(book => new BookDTO { BookId = book.BookId,Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.Price});
+            var response = actualBooks.Select(book => new BookDTO { BookId = book.BookId,Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.Cost * (1 + book.Markup/100)});
 
             return Ok(response);
         }
@@ -142,7 +142,7 @@ namespace WebStoreAPI.Controllers
                 throw;
             }
             var book = await _context.Book.FindAsync(cartItem.BookId);
-            var bookAddedToCart = new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.Price };
+            var bookAddedToCart = new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.Cost * (1 + book.Markup / 100) };
 
             return Ok(bookAddedToCart);
         }

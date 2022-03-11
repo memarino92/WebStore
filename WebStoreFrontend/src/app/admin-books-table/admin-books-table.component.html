@@ -1,0 +1,22 @@
+<table class="table-sm table-hover table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Cover</th>
+      <th scope="col">Title</th>
+      <th scope="col">Author</th>
+      <th scope="col">Category</th>
+      <th scope="col">Cost</th>
+      <th scope="col">Markup</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      admin-book-tr
+      *ngFor="let book of books; let index = index"
+      [book]="book"
+      [index]="index"
+    ></tr>
+  </tbody>
+</table>

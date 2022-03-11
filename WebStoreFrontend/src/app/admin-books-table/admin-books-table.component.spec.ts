@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { ImageUploadComponent } from './image-upload.component'
+import { AdminBooksTableComponent } from './admin-books-table.component'
 
-describe('ImageUploadComponent', () => {
-  let component: ImageUploadComponent
-  let fixture: ComponentFixture<ImageUploadComponent>
+describe('AdminBooksTableComponent', () => {
+  let component: AdminBooksTableComponent
+  let fixture: ComponentFixture<AdminBooksTableComponent>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ImageUploadComponent],
+      declarations: [AdminBooksTableComponent],
     }).compileComponents()
   })
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImageUploadComponent)
+    fixture = TestBed.createComponent(AdminBooksTableComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
   })
