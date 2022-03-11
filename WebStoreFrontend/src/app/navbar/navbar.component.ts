@@ -46,5 +46,11 @@ export class NavbarComponent implements OnInit {
     })
   }
 
-  getCartItems() {}
+  authenticateWithPopup() {
+    console.log('button clicked')
+    this.oidcSecurityService.authorizeWithPopUp().subscribe()
+  }
+  logout() {
+    this.oidcSecurityService.logoff()
+  }
 }
