@@ -4,6 +4,7 @@ import { CloudinaryImage } from '@cloudinary/url-gen/assets/CloudinaryImage'
 import { Cloudinary } from '@cloudinary/url-gen'
 import { thumbnail } from '@cloudinary/url-gen/actions/resize'
 import { imageNameFromUrl } from 'src/shared/utils/utils'
+import { ServiceProxy } from '../../shared/service-proxies/service-proxies'
 
 const FALLBACK_IMAGE_URL = `https://res.cloudinary.com/mmarino/image/upload/v1644550847/SimpleBook_h6isa6.svg`
 
@@ -20,7 +21,7 @@ export class AdminBookRowComponent implements OnInit {
 
   img!: CloudinaryImage
 
-  constructor() {}
+  constructor(private _serviceProxy: ServiceProxy) {}
 
   ngOnInit(): void {
     const bookImageUrl = this.book.imageUrl
@@ -31,5 +32,9 @@ export class AdminBookRowComponent implements OnInit {
     this.img = myCld
       .image(imageNameFromUrl(bookImageUrl))
       .resize(thumbnail().width(50).height(50))
+  }
+
+  deleteBook() {
+    this._serviceProxy.deleteBook(this.book.bookId).subscribe()
   }
 }

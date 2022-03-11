@@ -66,5 +66,20 @@ namespace WebStoreAPI.Controllers
             });
             return result;
         }
+
+        [HttpDelete(Name ="DeleteBook")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+            var book = await _webStoreContext.Book.FindAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            _webStoreContext.Book.Remove(book);
+            await _webStoreContext.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
