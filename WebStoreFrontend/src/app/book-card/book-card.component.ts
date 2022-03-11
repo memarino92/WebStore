@@ -4,7 +4,7 @@ import { Cloudinary } from '@cloudinary/url-gen'
 import { thumbnail } from '@cloudinary/url-gen/actions/resize'
 import { imageNameFromUrl } from 'src/shared/utils/utils'
 import {
-  Book,
+  BookDTO,
   CreateCartItemDTO,
 } from 'src/shared/service-proxies/service-proxies'
 import { OidcSecurityService } from 'angular-auth-oidc-client'
@@ -18,7 +18,7 @@ const FALLBACK_IMAGE_URL = `https://res.cloudinary.com/mmarino/image/upload/v164
   styleUrls: ['./book-card.component.css'],
 })
 export class BookCardComponent implements OnInit {
-  @Input() book!: Book
+  @Input() book!: BookDTO
 
   img!: CloudinaryImage
 
