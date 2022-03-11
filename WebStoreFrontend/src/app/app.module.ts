@@ -3,7 +3,10 @@ import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { RouterModule, Routes } from '@angular/router'
 import { environment } from 'src/environments/environment'
-import { API_BASE_URL } from 'src/shared/service-proxies/service-proxies'
+import {
+  API_BASE_URL,
+  ServiceProxy,
+} from 'src/shared/service-proxies/service-proxies'
 
 import { AppComponent } from './app.component'
 import { NavbarComponent } from 'src/app/navbar/navbar.component'
@@ -32,11 +35,17 @@ import { CartPageComponent } from './cart-page/cart-page.component'
 import { CategoryPageComponent } from './category-page/category-page.component'
 import { AdminBooksTableComponent } from './admin-books-table/admin-books-table.component'
 import { AdminBookRowComponent } from './admin-book-row/admin-book-row.component'
+import { AuthGuard } from 'src/shared/auth.guard'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'search', component: SearchComponent },
-  { path: 'admin', component: AdminPageComponent },
+  {
+    path: 'admin',
+    component: AdminPageComponent,
+    canActivate: [AuthGuard],
+    data: { roles: 'admin' },
+  },
   { path: 'form', component: UserInfoFormComponent },
   { path: 'cart', component: CartPageComponent },
   { path: 'categories/:category', component: CategoryPageComponent },
@@ -83,6 +92,7 @@ const routes: Routes = [
       provide: API_BASE_URL,
       useFactory: () => environment.API_BASE_URL,
     },
+    ServiceProxy,
   ],
   bootstrap: [AppComponent],
 })

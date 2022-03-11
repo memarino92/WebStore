@@ -58,5 +58,19 @@ namespace WebStoreAPI.Controllers
 
             return responseAdminUserDTO;
         }
+
+        [HttpGet("/getRolesForUserAsync")]
+        public async Task<RolesDTO> GetRolesForUserAsync(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var rolesDTO = new RolesDTO
+            {
+                Roles = (List<string>)roles
+            };
+
+            return rolesDTO;
+        }
     }
 }

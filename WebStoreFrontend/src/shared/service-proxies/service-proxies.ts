@@ -1094,6 +1094,62 @@ export class ServiceProxy {
         }
         return _observableOf<AdminUserDTO>(null as any);
     }
+
+    /**
+     * @param userName (optional) 
+     * @return Success
+     */
+    getRolesForUser(userName: string | undefined): Observable<RolesDTO> {
+        let url_ = this.baseUrl + "/getRolesForUserAsync?";
+        if (userName === null)
+            throw new Error("The parameter 'userName' cannot be null.");
+        else if (userName !== undefined)
+            url_ += "userName=" + encodeURIComponent("" + userName) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetRolesForUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetRolesForUser(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<RolesDTO>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<RolesDTO>;
+        }));
+    }
+
+    protected processGetRolesForUser(response: HttpResponseBase): Observable<RolesDTO> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RolesDTO.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<RolesDTO>(null as any);
+    }
 }
 
 export class AdminUserDTO implements IAdminUserDTO {
@@ -1674,6 +1730,50 @@ export interface IOrderItem {
     book?: Book;
     orderId?: number;
     order?: Order;
+}
+
+export class RolesDTO implements IRolesDTO {
+    roles?: string[] | undefined;
+
+    constructor(data?: IRolesDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): RolesDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new RolesDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IRolesDTO {
+    roles?: string[] | undefined;
 }
 
 export class UpdateUserPasswordDTO implements IUpdateUserPasswordDTO {
