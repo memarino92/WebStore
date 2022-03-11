@@ -36,15 +36,17 @@
     <p>Books</p>
   </a>
   <div class="flex items-center">
-    <a routerLink="/admin"><button class="button">Admin</button></a>
+    <a routerLink="/admin" *ngIf="isAuthenticated"
+      ><button class="button">Admin</button></a
+    >
     <!-- Shopping Cart -->
     <a class="text-reset me-3" routerLink="/cart">
       <i class="fas fa-shopping-cart"></i>
       <span
-        *ngIf="cartItems"
+        *ngIf="cartItems$"
         class="badge rounded-pill badge-notification bg-danger"
       >
-        {{ cartItems?.length }}
+        {{ (cartItems$ | async)?.length }}
       </span>
     </a>
     <!-- Notifications -->
@@ -75,12 +77,14 @@
       </ul>
     </div>
     <!-- User Name or Login Button-->
-    <div *ngIf="!userIsAuthenticated; else userNameTemplate">
+    <div *ngIf="!isAuthenticated; else userNameTemplate">
       <button routerLink="/auth">Log In</button>
     </div>
     <ng-template #userNameTemplate>
       <div class="m-2">
-        <button routerLink="/auth">{{ userData?.name }}</button>
+        <button routerLink="/auth">
+          {{ (userData$ | async)?.userData?.name }}
+        </button>
       </div>
     </ng-template>
     <!-- Avatar -->
