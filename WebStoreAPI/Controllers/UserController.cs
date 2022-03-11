@@ -23,9 +23,13 @@ namespace WebStoreAPI.Controllers
         }
 
         [HttpGet(Name = "getAllUsers")]
-        public IEnumerable<User> Get()
+        public IEnumerable<AdminUserDTO> Get()
         {
-            var result = _userManager.Users.ToList();
+            var result = _userManager.Users.ToList().Select(user => new AdminUserDTO
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+            });
             return result;
         }
 
@@ -36,6 +40,23 @@ namespace WebStoreAPI.Controllers
             var result = await _userManager.CreateAsync(user, createUserDTO.Password);
             
             return user;
+        }
+
+        [HttpPut(Name = "updateUserPassword")]
+        public async Task<AdminUserDTO> UpdateUserPassword([FromBody] UpdateUserPasswordDTO updateUserPasswordDTO)
+        {
+            var user = await _userManager.FindByNameAsync(updateUserPasswordDTO.UserName);
+
+            await _userManager.RemovePasswordAsync(user);
+            await _userManager.AddPasswordAsync(user, updateUserPasswordDTO.Password);
+
+            var responseAdminUserDTO = new AdminUserDTO
+            {
+                Email = user?.Email,
+                UserName = user?.UserName,
+            };
+
+            return responseAdminUserDTO;
         }
     }
 }

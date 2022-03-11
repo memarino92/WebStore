@@ -3,7 +3,7 @@ import { Subject } from 'rxjs'
 import {
   ServiceProxy,
   Book,
-  User,
+  AdminUserDTO,
   CreateUserDTO,
   CreateBookDTO,
 } from '../../shared/service-proxies/service-proxies'
@@ -16,7 +16,7 @@ import {
 })
 export class AdminPageComponent implements OnInit {
   books?: CreateBookDTO[]
-  users?: User[]
+  users?: AdminUserDTO[]
   saveBookEventSubject: Subject<void> = new Subject<void>()
   saveUserEventSubject: Subject<void> = new Subject<void>()
 

@@ -1,5 +1,9 @@
 import { Component, Input } from '@angular/core'
-import { User } from 'src/shared/service-proxies/service-proxies'
+import {
+  AdminUserDTO,
+  ServiceProxy,
+  UpdateUserPasswordDTO,
+} from 'src/shared/service-proxies/service-proxies'
 
 @Component({
   // Using attribute selector for tr element is fine
@@ -9,8 +13,19 @@ import { User } from 'src/shared/service-proxies/service-proxies'
   styleUrls: ['./user-row.component.css'],
 })
 export class UserRowComponent {
-  @Input() user!: User
+  @Input() user!: AdminUserDTO
   @Input() index!: number
+  newPassword: string = ''
 
-  constructor() {}
+  constructor(private _serviceProxy: ServiceProxy) {}
+
+  saveChanges() {
+    console.log(`New Password: ${this.newPassword}`)
+    if (!this.user.userName || !this.newPassword) return
+    const updateUserPasswordDTO = new UpdateUserPasswordDTO({
+      userName: this.user.userName,
+      password: this.newPassword,
+    })
+    this._serviceProxy.updateUserPassword(updateUserPasswordDTO).subscribe()
+  }
 }
