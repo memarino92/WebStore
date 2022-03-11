@@ -18,10 +18,32 @@ namespace WebStoreAPI.Controllers
         }
 
         [HttpGet(Name = "search")]
-        public IEnumerable<Book> Get(string searchParams)
+        public IEnumerable<BookDTO> Get(string searchParams)
         {
-            var result = _webStoreContext.Book.Where(x => x.Title.Contains(searchParams) || x.Author.Contains(searchParams));
+            var result = _webStoreContext.Book.Where(x => x.Title.Contains(searchParams) || x.Author.Contains(searchParams)).Select(book => new BookDTO
+            {
+                Author = book.Author,
+                Title = book.Title,
+                BookId = book.BookId,
+                ImageUrl = book.ImageUrl,
+                Price = book.Cost * (1 + book.Markup / 100)
+            });
             return result;
+        }
+
+        [HttpGet("{category}")]
+        public IEnumerable<BookDTO> Category(string category)
+        {
+           var result = _webStoreContext.Book.Where(x => x.Category == category).Select(book => new BookDTO
+           {
+               Author = book.Author,
+               Title = book.Title,
+               BookId = book.BookId,
+               ImageUrl = book.ImageUrl,
+               Price = book.Cost * (1 + book.Markup / 100)
+           });
+
+           return result;
         }
     }
 }
