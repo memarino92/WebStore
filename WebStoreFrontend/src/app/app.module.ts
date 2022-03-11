@@ -31,7 +31,9 @@ import { UsersTableComponent } from './users-table/users-table.component'
 import { UserRowComponent } from './user-row/user-row.component'
 import { UserInfoFormComponent } from './user-info-form/user-info-form.component'
 import { CartPageComponent } from './cart-page/cart-page.component'
-import { CategoryPageComponent } from './category-page/category-page.component'
+import { CategoryPageComponent } from './category-page/category-page.component';
+import { AdminBooksTableComponent } from './admin-books-table/admin-books-table.component';
+import { AdminBookRowComponent } from './admin-book-row/admin-book-row.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -69,6 +71,8 @@ const routes: Routes = [
     UserInfoFormComponent,
     CartPageComponent,
     CategoryPageComponent,
+    AdminBooksTableComponent,
+    AdminBookRowComponent,
   ],
   imports: [
     BrowserModule,
