@@ -22,8 +22,9 @@ export class BookInfoFormComponent implements OnInit, OnDestroy {
   bookInfoForm = new FormGroup({
     title: new FormControl(''),
     author: new FormControl(''),
-    price: new FormControl(''),
-    summary: new FormControl(''),
+    cost: new FormControl(''),
+    markup: new FormControl(''),
+    category: new FormControl(''),
   })
 
   imageUrl: string = ''
