@@ -1,25 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { UserRowComponent } from './user-row.component';
+import { UserRowComponent } from './user-row.component'
 
 describe('UserRowComponent', () => {
-  let component: UserRowComponent;
-  let fixture: ComponentFixture<UserRowComponent>;
+  let component: UserRowComponent
+  let fixture: ComponentFixture<UserRowComponent>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserRowComponent ]
-    })
-    .compileComponents();
-  });
+      declarations: [UserRowComponent],
+    }).compileComponents()
+  })
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserRowComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(UserRowComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})
