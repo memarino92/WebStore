@@ -1,0 +1,8 @@
+<th scope="row">{{ index + 1 }}</th>
+<td><advanced-image [cldImg]="img"></advanced-image></td>
+<td>{{ book.title }}</td>
+<td>{{ book.author }}</td>
+<td>{{ book.category }}</td>
+<td>${{ book.cost }}</td>
+<td>{{ book.markup }}%</td>
+<td><button (click)="deleteBook()">Delete</button></td>

@@ -50,5 +50,36 @@ namespace WebStoreAPI.Controllers
             _webStoreContext.SaveChanges();
             return newBook;
         }
+
+        [HttpGet("/GetBooksForAdmin")]
+        public IEnumerable<CreateBookDTO> GetBooksForAdmin()
+        {
+            var result = _webStoreContext.Book.ToList().Select(book => new CreateBookDTO
+            {
+                Author = book.Author,
+                Title = book.Title,
+                BookId = book.BookId,
+                ImageUrl = book.ImageUrl,
+                Cost = book.Cost,
+                Markup= book.Markup,
+                Category = book.Category
+            });
+            return result;
+        }
+
+        [HttpDelete(Name ="DeleteBook")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+            var book = await _webStoreContext.Book.FindAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            _webStoreContext.Book.Remove(book);
+            await _webStoreContext.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

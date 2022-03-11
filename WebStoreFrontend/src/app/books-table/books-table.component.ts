@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core'
-import { Book } from 'src/shared/service-proxies/service-proxies'
+import { BookDTO } from 'src/shared/service-proxies/service-proxies'
 
 @Component({
   selector: 'app-books-table',
@@ -7,7 +7,7 @@ import { Book } from 'src/shared/service-proxies/service-proxies'
   styleUrls: ['./books-table.component.css'],
 })
 export class BooksTableComponent {
-  @Input() books?: Book[]
+  @Input() books?: BookDTO[]
 
   constructor() {}
 }

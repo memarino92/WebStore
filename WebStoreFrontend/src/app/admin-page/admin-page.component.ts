@@ -15,7 +15,7 @@ import {
   providers: [ServiceProxy],
 })
 export class AdminPageComponent implements OnInit {
-  books?: Book[]
+  books?: CreateBookDTO[]
   users?: User[]
   saveBookEventSubject: Subject<void> = new Subject<void>()
   saveUserEventSubject: Subject<void> = new Subject<void>()
@@ -26,7 +26,7 @@ export class AdminPageComponent implements OnInit {
     this.getBooks()
   }
   getBooks() {
-    this._service.books().subscribe((result) => {
+    this._service.getBooksForAdmin().subscribe((result) => {
       this.books = result
     })
     this._service.getAllUsers().subscribe((result) => {
