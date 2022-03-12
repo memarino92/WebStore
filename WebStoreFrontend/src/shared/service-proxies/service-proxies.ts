@@ -317,7 +317,7 @@ export class ServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    addItemToCart(body: CreateCartItemDTO | undefined): Observable<BookDTO> {
+    addItemToCart(body: CreateCartItemDTO | undefined): Observable<BookDTO[]> {
         let url_ = this.baseUrl + "/api/CartItems";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -340,14 +340,14 @@ export class ServiceProxy {
                 try {
                     return this.processAddItemToCart(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<BookDTO>;
+                    return _observableThrow(e) as any as Observable<BookDTO[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<BookDTO>;
+                return _observableThrow(response_) as any as Observable<BookDTO[]>;
         }));
     }
 
-    protected processAddItemToCart(response: HttpResponseBase): Observable<BookDTO> {
+    protected processAddItemToCart(response: HttpResponseBase): Observable<BookDTO[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -358,7 +358,14 @@ export class ServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = BookDTO.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(BookDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -366,7 +373,7 @@ export class ServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<BookDTO>(null as any);
+        return _observableOf<BookDTO[]>(null as any);
     }
 
     /**

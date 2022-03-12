@@ -107,7 +107,7 @@ namespace WebStoreAPI.Controllers
         // POST: api/CartItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost(Name ="AddItemToCart")]
-        public async Task<ActionResult<BookDTO>> AddItemToCart(CreateCartItemDTO cartItem)
+        public async Task<ActionResult<List<BookDTO>>> AddItemToCart(CreateCartItemDTO cartItem)
         {
             var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             if (user == null)
@@ -146,7 +146,17 @@ namespace WebStoreAPI.Controllers
             var book = await _context.Book.FindAsync(cartItem.BookId);
             var bookAddedToCart = new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.GetPrice() };
 
-            return Ok(bookAddedToCart);
+            var cartItems = _context.CartItem.Where(cartItem => cartItem.CartId == cart.CartId)
+                .Select(cartItem => new BookDTO
+                {
+                    BookId = cartItem.BookId,
+                    Title = cartItem.Book.Title, 
+                    Author = cartItem.Book.Author,
+                    ImageUrl = cartItem.Book.ImageUrl,
+                    Price = cartItem.Book.Cost * (1 + cartItem.Book.Markup / 100)
+                }).ToList();
+
+            return Ok(cartItems);
         }
 
         // DELETE: api/CartItems/5

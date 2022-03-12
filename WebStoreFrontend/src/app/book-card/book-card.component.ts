@@ -9,6 +9,7 @@ import {
 } from 'src/shared/service-proxies/service-proxies'
 import { OidcSecurityService } from 'angular-auth-oidc-client'
 import { ServiceProxy } from 'src/shared/service-proxies/service-proxies'
+import { CartService } from '../cart.service'
 
 const FALLBACK_IMAGE_URL = `https://res.cloudinary.com/mmarino/image/upload/v1644550847/SimpleBook_h6isa6.svg`
 
@@ -24,7 +25,8 @@ export class BookCardComponent implements OnInit {
 
   constructor(
     private oidcSecurityService: OidcSecurityService,
-    private serviceProxy: ServiceProxy
+    private serviceProxy: ServiceProxy,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +51,6 @@ export class BookCardComponent implements OnInit {
           bookId: this.book.bookId,
         })
       )
-      .subscribe()
+      .subscribe((result) => this.cartService.updateCartItems(result))
   }
 }
