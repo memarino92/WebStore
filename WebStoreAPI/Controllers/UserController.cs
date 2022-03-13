@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace WebStoreAPI.Controllers
 {
@@ -17,9 +18,9 @@ namespace WebStoreAPI.Controllers
         private readonly WebStoreContext _webStoreContext;
 
         public UserController(
-            UserManager<User> userManager, 
+            UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
-            ILogger<UserController> logger, 
+            ILogger<UserController> logger,
             WebStoreContext context
             )
         {
@@ -42,17 +43,21 @@ namespace WebStoreAPI.Controllers
         }
 
         [HttpPost(Name = "createUser")]
-        public async Task<User> CreateUser([FromBody]CreateUserDTO createUserDTO)
+        public async Task<User> CreateUser([FromBody] CreateUserDTO createUserDTO)
         {
             var user = new User { Email = createUserDTO.Email, UserName = createUserDTO.UserName };
-            var result = await _userManager.CreateAsync(user, createUserDTO.Password);
+            await _userManager.CreateAsync(user, createUserDTO.Password);
 
-            bool adminRoleExists = await _roleManager.RoleExistsAsync("admin");
-            if (!adminRoleExists)
-            {
-                await _roleManager.CreateAsync(new IdentityRole("admin"));
-            }
-            var result2 = await _userManager.AddToRoleAsync(user, "admin");
+            // bool adminRoleExists = await _roleManager.RoleExistsAsync("admin");
+            // if (!adminRoleExists)
+            // {
+            //     await _roleManager.CreateAsync(new IdentityRole("admin"));
+            // }
+            // var result2 = await _userManager.AddToRoleAsync(user, "admin");
+
+
+            Claim userClaim = new Claim("name", createUserDTO.UserName);
+            await _userManager.AddClaimAsync(user, userClaim);
 
             return user;
         }

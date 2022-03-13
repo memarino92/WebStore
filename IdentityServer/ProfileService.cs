@@ -7,11 +7,11 @@ using System.Security.Claims;
 
 namespace IdentityServer
 {
-    public class ProfileService : IProfileService
+    public class WebstoreProfileService : IProfileService
     {
         protected UserManager<ApplicationUser> _userManager;
 
-        public ProfileService(UserManager<ApplicationUser> userManager)
+        public WebstoreProfileService(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
@@ -29,6 +29,9 @@ namespace IdentityServer
             }
 
             context.IssuedClaims.AddRange(roleClaims);
+
+            IList<Claim> userClaims = await _userManager.GetClaimsAsync(user);
+            context.IssuedClaims.AddRange(userClaims);
         }
 
         public Task IsActiveAsync(IsActiveContext context)

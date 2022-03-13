@@ -49,7 +49,8 @@ internal static class HostingExtensions
                 options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
                     sql => sql.MigrationsAssembly(migrationsAssembly));
             })
-            .AddAspNetIdentity<ApplicationUser>();
+            .AddAspNetIdentity<ApplicationUser>()
+            .AddProfileService<WebstoreProfileService>();
 
         builder.Services.AddAuthentication();
 

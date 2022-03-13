@@ -1,34 +1,22 @@
 import { Injectable } from '@angular/core'
-import {
-  Router,
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-} from '@angular/router'
+import { CanActivate, ActivatedRouteSnapshot } from '@angular/router'
 
 import { OidcSecurityService } from 'angular-auth-oidc-client'
-import { RolesDTO, ServiceProxy } from './service-proxies/service-proxies'
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
   currentUserData = this.authenticationService.getUserData()
-  roles?: string[]
 
-  constructor(
-    private router: Router,
-    private authenticationService: OidcSecurityService,
-    private serviceProxy: ServiceProxy
-  ) {
-    this.getRolesAsync()
-  }
+  constructor(private authenticationService: OidcSecurityService) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    this.getRolesAsync()
+  canActivate(route: ActivatedRouteSnapshot) {
     if (this.currentUserData) {
       // check if route is restricted by role
-      if (route.data.roles && route.data.roles.indexOf(this.roles) === -1) {
-        // role not authorised so redirect to home page
-        this.router.navigate(['/'])
+      if (
+        route.data.roles &&
+        route.data.roles.indexOf(this.currentUserData.role) === -1
+      ) {
+        // role not authorised
         return false
       }
 
@@ -36,19 +24,7 @@ export class AuthGuard implements CanActivate {
       return true
     }
 
-    // not logged in so redirect to login page with the return url
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } })
+    // not logged in
     return false
-  }
-
-  private getRolesAsync() {
-    console.log('getting roles!')
-    let username = this.currentUserData.preferred_username
-    if (!username) return
-
-    this.serviceProxy.getRolesForUser(username).subscribe((result) => {
-      console.log(result)
-      this.roles = result?.roles
-    })
   }
 }
