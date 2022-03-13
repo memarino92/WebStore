@@ -47,7 +47,6 @@ export class NavbarComponent implements OnInit {
   }
 
   authenticateWithPopup() {
-    console.log('button clicked')
     this.oidcSecurityService.authorizeWithPopUp().subscribe()
   }
   logout() {

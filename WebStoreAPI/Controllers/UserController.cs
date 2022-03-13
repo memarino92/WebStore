@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-
-
+using System.Security.Claims;
 
 namespace WebStoreAPI.Controllers
 {
@@ -37,7 +36,10 @@ namespace WebStoreAPI.Controllers
         public async Task<User> CreateUser([FromBody]CreateUserDTO createUserDTO)
         {
             var user = new User { Email = createUserDTO.Email, UserName = createUserDTO.UserName };
-            var result = await _userManager.CreateAsync(user, createUserDTO.Password);
+            await _userManager.CreateAsync(user, createUserDTO.Password);
+
+            Claim userClaim = new Claim("name", createUserDTO.UserName);
+            await _userManager.AddClaimAsync(user, userClaim);
             
             return user;
         }

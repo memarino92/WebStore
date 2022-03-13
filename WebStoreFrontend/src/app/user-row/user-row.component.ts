@@ -20,7 +20,6 @@ export class UserRowComponent {
   constructor(private _serviceProxy: ServiceProxy) {}
 
   saveChanges() {
-    console.log(`New Password: ${this.newPassword}`)
     if (!this.user.userName || !this.newPassword) return
     const updateUserPasswordDTO = new UpdateUserPasswordDTO({
       userName: this.user.userName,
