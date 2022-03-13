@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using Microsoft.IdentityModel.Tokens;
 using WebStoreAPI;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 Env.Load();
 Env.TraversePath().Load();
@@ -27,10 +28,10 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 // accepts any access token issued by identity server
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
-        options.Authority = "https://localhost:5001";
+        options.Authority = Env.GetString("TOKEN_AUTHORITY");
 
         options.TokenValidationParameters = new TokenValidationParameters
         {

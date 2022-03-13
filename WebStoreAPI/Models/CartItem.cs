@@ -17,6 +17,5 @@
     public class CreateCartItemDTO
     {
         public int BookId { get; set; }
-        public string Username { get; set; }
     }
 }

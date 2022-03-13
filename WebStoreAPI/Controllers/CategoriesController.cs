@@ -26,7 +26,7 @@ namespace WebStoreAPI.Controllers
                 Title = book.Title,
                 BookId = book.BookId,
                 ImageUrl = book.ImageUrl,
-                Price = book.Cost * (1 + book.Markup / 100)
+                Price = book.GetPrice(),
             });
 
             return result;
