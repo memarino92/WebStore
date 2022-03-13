@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.securityService
       .checkAuth()
-      .subscribe(({ isAuthenticated, userData }) => {})
+      .subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {})
     this.getCartItems()
   }
 
