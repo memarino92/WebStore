@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using WebStoreAPI;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebStoreAPI.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class CartItemsController : ControllerBase
@@ -28,9 +30,9 @@ namespace WebStoreAPI.Controllers
 
         // GET: api/CartItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDTO>>> GetCartItemsForUser(string userId)
+        public async Task<ActionResult<IEnumerable<BookDTO>>> GetCartItemsForUser()
         {
-            var user = await _userManager.FindByNameAsync(userId);
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             if (user == null)
             { return BadRequest(); }
 
@@ -52,7 +54,7 @@ namespace WebStoreAPI.Controllers
             List<int> bookIds = cartItems.Select(cartItem => cartItem.BookId).ToList();
             var books = await _context.Book.Where(book => bookIds.Contains(book.BookId)).ToListAsync();
             var actualBooks = bookIds.Select(bookId => books.Find(book => book.BookId == bookId));
-            var response = actualBooks.Select(book => new BookDTO { BookId = book.BookId,Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.Cost * (1 + book.Markup/100)});
+            var response = actualBooks.Select(book => new BookDTO { BookId = book.BookId,Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.GetPrice()});
 
             return Ok(response);
         }
@@ -107,7 +109,7 @@ namespace WebStoreAPI.Controllers
         [HttpPost(Name ="AddItemToCart")]
         public async Task<ActionResult<BookDTO>> AddItemToCart(CreateCartItemDTO cartItem)
         {
-            var user = await _userManager.FindByNameAsync(cartItem.Username);
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             if (user == null)
             { return BadRequest(); }
             
@@ -142,7 +144,7 @@ namespace WebStoreAPI.Controllers
                 throw;
             }
             var book = await _context.Book.FindAsync(cartItem.BookId);
-            var bookAddedToCart = new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.Cost * (1 + book.Markup / 100) };
+            var bookAddedToCart = new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.GetPrice() };
 
             return Ok(bookAddedToCart);
         }

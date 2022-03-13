@@ -1502,7 +1502,6 @@ export interface ICreateBookDTO {
 
 export class CreateCartItemDTO implements ICreateCartItemDTO {
     bookId?: number;
-    username?: string | undefined;
 
     constructor(data?: ICreateCartItemDTO) {
         if (data) {
@@ -1516,7 +1515,6 @@ export class CreateCartItemDTO implements ICreateCartItemDTO {
     init(_data?: any) {
         if (_data) {
             this.bookId = _data["bookId"];
-            this.username = _data["username"];
         }
     }
 
@@ -1530,14 +1528,12 @@ export class CreateCartItemDTO implements ICreateCartItemDTO {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["bookId"] = this.bookId;
-        data["username"] = this.username;
         return data;
     }
 }
 
 export interface ICreateCartItemDTO {
     bookId?: number;
-    username?: string | undefined;
 }
 
 export class CreateUserDTO implements ICreateUserDTO {

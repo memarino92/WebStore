@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebStoreAPI.Controllers
@@ -27,7 +26,7 @@ namespace WebStoreAPI.Controllers
                 Title = book.Title,
                 BookId = book.BookId,
                 ImageUrl = book.ImageUrl,
-                Price = book.Cost * (1 + book.Markup / 100)
+                Price = book.GetPrice(),
             });
             return result;
         }
