@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core'
-import { OidcSecurityService } from 'angular-auth-oidc-client'
 import {
   BookDTO,
   ServiceProxy,
@@ -16,8 +15,7 @@ export class CartPageComponent implements OnInit {
   cartItems!: BookDTO[]
   constructor(
     private serviceProxy: ServiceProxy,
-    public cartService: CartService,
-    private securityService: OidcSecurityService
+    public cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -25,10 +23,7 @@ export class CartPageComponent implements OnInit {
   }
 
   getCartItems() {
-    const username = this.securityService.getUserData()?.preferred_username
-    if (!username) return
-
-    this.serviceProxy.cartItemsAll(username).subscribe((result) => {
+    this.serviceProxy.cartItemsAll().subscribe((result) => {
       this.cartItems = result
       this.cartService.updateCartItems(result)
     })
@@ -42,9 +37,6 @@ export class CartPageComponent implements OnInit {
   }
 
   createOrder() {
-    const username = this.securityService.getUserData()?.preferred_username
-    if (!username) return
-
-    this.serviceProxy.ordersPOST(username).subscribe()
+    this.serviceProxy.ordersPOST().subscribe()
   }
 }

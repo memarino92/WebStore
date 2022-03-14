@@ -17,6 +17,7 @@ using WebStoreAPI;
 
 namespace WebStoreAPI.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
@@ -86,9 +87,9 @@ namespace WebStoreAPI.Controllers
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<OrderDTO>> PostOrder(string username)
+        public async Task<ActionResult<OrderDTO>> PostOrder()
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
             if (user == null) return BadRequest();
 
             var cart = await _context.Cart.Where(cart => cart.UserId == user.Id && cart.IsActive == true).FirstOrDefaultAsync();

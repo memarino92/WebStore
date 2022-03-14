@@ -28,11 +28,7 @@ export class AppComponent implements OnInit {
   }
 
   getCartItems() {
-    const username = this.securityService.getUserData()?.preferred_username
-
-    if (!username) return
-
-    this.serviceProxy.cartItemsAll(username).subscribe((result) => {
+    this.serviceProxy.cartItemsAll().subscribe((result) => {
       this.cartItems = result
       this.cartService.updateCartItems(result)
     })
