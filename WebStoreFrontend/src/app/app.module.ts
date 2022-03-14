@@ -37,6 +37,7 @@ import { CategoryPageComponent } from './category-page/category-page.component'
 import { AdminBooksTableComponent } from './admin-books-table/admin-books-table.component'
 import { AdminBookRowComponent } from './admin-book-row/admin-book-row.component'
 import { AuthGuard } from 'src/shared/auth.guard'
+import { OrdersPageComponent } from './orders-page/orders-page.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -49,6 +50,7 @@ const routes: Routes = [
   },
   { path: 'form', component: UserInfoFormComponent },
   { path: 'cart', component: CartPageComponent },
+  { path: 'orders', component: OrdersPageComponent },
   { path: 'categories/:category', component: CategoryPageComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
@@ -78,6 +80,7 @@ const routes: Routes = [
     CategoryPageComponent,
     AdminBooksTableComponent,
     AdminBookRowComponent,
+    OrdersPageComponent,
   ],
   imports: [
     BrowserModule,
