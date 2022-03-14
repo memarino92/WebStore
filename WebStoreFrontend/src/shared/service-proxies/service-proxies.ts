@@ -594,7 +594,7 @@ export class ServiceProxy {
     /**
      * @return Success
      */
-    ordersAll(): Observable<Order[]> {
+    getOrdersForUser(): Observable<OrderDTO[]> {
         let url_ = this.baseUrl + "/api/Orders";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -607,20 +607,20 @@ export class ServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processOrdersAll(response_);
+            return this.processGetOrdersForUser(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processOrdersAll(response_ as any);
+                    return this.processGetOrdersForUser(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Order[]>;
+                    return _observableThrow(e) as any as Observable<OrderDTO[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Order[]>;
+                return _observableThrow(response_) as any as Observable<OrderDTO[]>;
         }));
     }
 
-    protected processOrdersAll(response: HttpResponseBase): Observable<Order[]> {
+    protected processGetOrdersForUser(response: HttpResponseBase): Observable<OrderDTO[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -634,7 +634,7 @@ export class ServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(Order.fromJS(item));
+                    result200!.push(OrderDTO.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -646,7 +646,7 @@ export class ServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<Order[]>(null as any);
+        return _observableOf<OrderDTO[]>(null as any);
     }
 
     /**
@@ -1583,6 +1583,8 @@ export interface IOrder {
 
 export class OrderDTO implements IOrderDTO {
     orderId?: number;
+    userId?: string | undefined;
+    bookDTOs?: BookDTO[] | undefined;
 
     constructor(data?: IOrderDTO) {
         if (data) {
@@ -1596,6 +1598,12 @@ export class OrderDTO implements IOrderDTO {
     init(_data?: any) {
         if (_data) {
             this.orderId = _data["orderId"];
+            this.userId = _data["userId"];
+            if (Array.isArray(_data["bookDTOs"])) {
+                this.bookDTOs = [] as any;
+                for (let item of _data["bookDTOs"])
+                    this.bookDTOs!.push(BookDTO.fromJS(item));
+            }
         }
     }
 
@@ -1609,12 +1617,20 @@ export class OrderDTO implements IOrderDTO {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["orderId"] = this.orderId;
+        data["userId"] = this.userId;
+        if (Array.isArray(this.bookDTOs)) {
+            data["bookDTOs"] = [];
+            for (let item of this.bookDTOs)
+                data["bookDTOs"].push(item.toJSON());
+        }
         return data;
     }
 }
 
 export interface IOrderDTO {
     orderId?: number;
+    userId?: string | undefined;
+    bookDTOs?: BookDTO[] | undefined;
 }
 
 export class OrderItem implements IOrderItem {

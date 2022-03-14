@@ -33,10 +33,25 @@ namespace WebStoreAPI.Controllers
         }
 
         // GET: api/Orders
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
+        [HttpGet(Name = "GetOrdersForUserAsync")]
+        public async Task<ActionResult<IEnumerable<OrderDTO>>> GetOrdersForUserAsync()
         {
-            return await _context.Order.ToListAsync();
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            var orders =  _context.Order.Where(order => order.UserId == user.Id);
+            var ordersDTO = orders.Select(order => new OrderDTO
+            {
+                OrderId = order.OrderId,
+                UserId = order.UserId,
+                BookDTOs = order.Items.Select(o => new BookDTO
+                {
+                    BookId = o.Book.BookId,
+                    Author = o.Book.Author,
+                    Title = o.Book.Title,
+                    ImageUrl = o.Book.ImageUrl,
+                    Price = o.Book.GetPrice()
+                }).ToList()
+            });
+            return Ok(ordersDTO);
         }
 
         // GET: api/Orders/5

@@ -12,5 +12,9 @@
     public class OrderDTO
     {
         public int OrderId { get; set; }
+
+        public string UserId { get; set; }
+
+        public List<BookDTO> BookDTOs { get; set; }
     }
 }

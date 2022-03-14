@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
 import {
   BookDTO,
   ServiceProxy,
@@ -15,7 +16,8 @@ export class CartPageComponent implements OnInit {
   cartItems!: BookDTO[]
   constructor(
     private serviceProxy: ServiceProxy,
-    public cartService: CartService
+    public cartService: CartService,
+    public router: Router
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +39,8 @@ export class CartPageComponent implements OnInit {
   }
 
   createOrder() {
-    this.serviceProxy.ordersPOST().subscribe()
+    this.serviceProxy.ordersPOST().subscribe(() => {
+      this.router.navigate(['/orders'])
+    })
   }
 }

@@ -1,0 +1,35 @@
+<!-- Navbar -->
+<app-navbar></app-navbar>
+
+<!-- Nav Links -->
+<app-nav-links></app-nav-links>
+
+<!-- Cart Items -->
+<div class="flex w-full flex-wrap items-center justify-center p-20">
+  <p>Your orders:</p>
+  <div *ngFor="let order of orders$ | async">
+    <p>Order Number {{ order.orderId }}</p>
+    <table class="table-sm table-hover table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Author</th>
+          <th scope="col">Price</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let book of order.bookDTOs; let index = index">
+          <th scope="row">{{ index + 1 }}</th>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>${{ book.price }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+</div>

@@ -18,4 +18,11 @@
     {
         public int BookId { get; set; }
     }
+
+    public class CartItemDTO
+    {
+        public string CartItemId { get; set; }
+        public int BookId { get; set; }
+
+    }
 }
