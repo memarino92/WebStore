@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { ServiceProxy } from 'src/shared/service-proxies/service-proxies'
+import { Observable } from 'rxjs'
+import {
+  OrderDTO,
+  ServiceProxy,
+} from 'src/shared/service-proxies/service-proxies'
 
 @Component({
   selector: 'app-orders-page',
@@ -7,9 +11,11 @@ import { ServiceProxy } from 'src/shared/service-proxies/service-proxies'
   styleUrls: ['./orders-page.component.css'],
 })
 export class OrdersPageComponent implements OnInit {
-  constructor(private serviceProxy: ServiceProxy) {}
+  orders$: Observable<OrderDTO[]>
 
-  ngOnInit(): void {
-    this.serviceProxy.getOrdersForUser().subscribe()
+  constructor(private serviceProxy: ServiceProxy) {
+    this.orders$ = this.serviceProxy.getOrdersForUser()
   }
+
+  ngOnInit(): void {}
 }
