@@ -6,10 +6,10 @@
 
 <!-- Cart Items -->
 <div class="flex w-full flex-wrap items-center justify-center p-20">
-  <p>Your orders:</p>
-  <div *ngFor="let order of orders$ | async">
-    <p>Order Number {{ order.orderId }}</p>
-    <table class="table-sm table-hover table">
+  <h3 class="h3">Your orders:</h3>
+  <div *ngFor="let order of orders$ | async" class="m-4 w-full">
+    <h4 class="h4 m-2">Order Number {{ order.orderId }}</h4>
+    <table class="table-sm table w-full">
       <thead>
         <tr>
           <th scope="col">#</th>
