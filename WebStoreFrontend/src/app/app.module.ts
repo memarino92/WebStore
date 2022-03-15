@@ -48,9 +48,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: 'admin' },
   },
-  { path: 'form', component: UserInfoFormComponent },
-  { path: 'cart', component: CartPageComponent },
-  { path: 'orders', component: OrdersPageComponent },
+  { path: 'cart', component: CartPageComponent, canActivate: [AuthGuard] },
+  { path: 'orders', component: OrdersPageComponent, canActivate: [AuthGuard] },
   { path: 'categories/:category', component: CategoryPageComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ]
