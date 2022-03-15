@@ -7,7 +7,7 @@ import { Book } from 'src/shared/service-proxies/service-proxies'
   styleUrls: ['./book-list.component.css'],
 })
 export class BookListComponent {
-  @Input() books?: Book[]
+  @Input() books!: Book[] | null
 
   constructor() {}
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit, Output } from '@angular/core'
+import { Component } from '@angular/core'
+import { Observable } from 'rxjs'
 import {
   ServiceProxy,
   Book,
@@ -10,28 +11,10 @@ import {
   styleUrls: ['./featured.component.css'],
   providers: [ServiceProxy],
 })
-export class FeaturedComponent implements OnInit {
-  @Output() books?: Book[]
+export class FeaturedComponent {
+  books$: Observable<Book[]>
 
-  constructor(private bookService: ServiceProxy) {}
-
-  ngOnInit(): void {
-    this.getBooks()
+  constructor(private serviceProxy: ServiceProxy) {
+    this.books$ = this.serviceProxy.books()
   }
-
-  getBooks() {
-    this.bookService.books().subscribe((result) => {
-      this.books = shuffleArray(result)
-    })
-  }
-}
-
-function shuffleArray(array: any[]): any[] {
-  let newArray = [...array]
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[newArray[i], newArray[j]] = [newArray[j], newArray[i]]
-  }
-
-  return newArray
 }
