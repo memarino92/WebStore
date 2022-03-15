@@ -37,7 +37,8 @@ import { CategoryPageComponent } from './category-page/category-page.component'
 import { AdminBooksTableComponent } from './admin-books-table/admin-books-table.component'
 import { AdminBookRowComponent } from './admin-book-row/admin-book-row.component'
 import { AuthGuard } from 'src/shared/auth.guard'
-import { OrdersPageComponent } from './orders-page/orders-page.component'
+import { OrdersPageComponent } from './orders-page/orders-page.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -90,6 +91,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     CloudinaryModule,
     AuthConfigModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     HttpClientModule,
