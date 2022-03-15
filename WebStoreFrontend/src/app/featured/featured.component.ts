@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
 import {
   ServiceProxy,
   Book,
@@ -15,6 +16,18 @@ export class FeaturedComponent {
   books$: Observable<Book[]>
 
   constructor(private serviceProxy: ServiceProxy) {
-    this.books$ = this.serviceProxy.books()
+    this.books$ = this.serviceProxy
+      .books()
+      .pipe(map((books) => shuffleArray(books)))
   }
+}
+
+function shuffleArray(array: any[]): any[] {
+  let newArray = [...array]
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[newArray[i], newArray[j]] = [newArray[j], newArray[i]]
+  }
+
+  return newArray
 }
