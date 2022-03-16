@@ -98,7 +98,7 @@
       </div>
 
       <!-- Books Table -->
-      <app-admin-books-table [books]="books"></app-admin-books-table>
+      <app-admin-books-table [books]="books$ | async"></app-admin-books-table>
     </div>
     <!-- Users tab content -->
     <div
@@ -161,7 +161,7 @@
         </div>
       </div>
       <!-- Users Table -->
-      <app-users-table [users]="users"></app-users-table>
+      <app-users-table [users]="users$ | async"></app-users-table>
     </div>
   </div>
   <!-- Tabs content -->

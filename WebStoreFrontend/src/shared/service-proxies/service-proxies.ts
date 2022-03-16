@@ -88,7 +88,7 @@ export class ServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    createBook(body: CreateBookDTO | undefined): Observable<Book> {
+    createBook(body: CreateBookDTO | undefined): Observable<CreateBookDTO> {
         let url_ = this.baseUrl + "/Book";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -111,14 +111,14 @@ export class ServiceProxy {
                 try {
                     return this.processCreateBook(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Book>;
+                    return _observableThrow(e) as any as Observable<CreateBookDTO>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Book>;
+                return _observableThrow(response_) as any as Observable<CreateBookDTO>;
         }));
     }
 
-    protected processCreateBook(response: HttpResponseBase): Observable<Book> {
+    protected processCreateBook(response: HttpResponseBase): Observable<CreateBookDTO> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -129,7 +129,7 @@ export class ServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Book.fromJS(resultData200);
+            result200 = CreateBookDTO.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -137,7 +137,7 @@ export class ServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<Book>(null as any);
+        return _observableOf<CreateBookDTO>(null as any);
     }
 
     /**
@@ -1481,6 +1481,7 @@ export class CreateUserDTO implements ICreateUserDTO {
     userName?: string | undefined;
     password?: string | undefined;
     email?: string | undefined;
+    isAdmin?: boolean;
 
     constructor(data?: ICreateUserDTO) {
         if (data) {
@@ -1496,6 +1497,7 @@ export class CreateUserDTO implements ICreateUserDTO {
             this.userName = _data["userName"];
             this.password = _data["password"];
             this.email = _data["email"];
+            this.isAdmin = _data["isAdmin"];
         }
     }
 
@@ -1511,6 +1513,7 @@ export class CreateUserDTO implements ICreateUserDTO {
         data["userName"] = this.userName;
         data["password"] = this.password;
         data["email"] = this.email;
+        data["isAdmin"] = this.isAdmin;
         return data;
     }
 }
@@ -1519,6 +1522,7 @@ export interface ICreateUserDTO {
     userName?: string | undefined;
     password?: string | undefined;
     email?: string | undefined;
+    isAdmin?: boolean;
 }
 
 export class Order implements IOrder {
