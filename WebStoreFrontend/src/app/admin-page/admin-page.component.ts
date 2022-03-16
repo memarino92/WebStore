@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
-import { Subject } from 'rxjs'
+import { Observable, Subject } from 'rxjs'
+import { map } from 'rxjs/operators'
 import {
   ServiceProxy,
   Book,
@@ -14,30 +15,23 @@ import {
   styleUrls: ['./admin-page.component.css'],
   providers: [ServiceProxy],
 })
-export class AdminPageComponent implements OnInit {
-  books?: CreateBookDTO[]
-  users?: AdminUserDTO[]
+export class AdminPageComponent {
+  books$!: Observable<CreateBookDTO[]>
+  users$!: Observable<AdminUserDTO[]>
   saveBookEventSubject: Subject<void> = new Subject<void>()
   saveUserEventSubject: Subject<void> = new Subject<void>()
 
-  constructor(private _service: ServiceProxy) {}
-
-  ngOnInit(): void {
-    this.getBooks()
-  }
-  getBooks() {
-    this._service.getBooksForAdmin().subscribe((result) => {
-      this.books = result
-    })
-    this._service.getAllUsers().subscribe((result) => {
-      this.users = result
-    })
+  constructor(private serviceProxy: ServiceProxy) {
+    this.books$ = this.serviceProxy.getBooksForAdmin()
+    this.users$ = this.serviceProxy.getAllUsers()
   }
 
   createBook(book: Book) {
     let newBook = new CreateBookDTO(book)
 
-    this._service.createBook(newBook).subscribe()
+    this.serviceProxy.createBook(newBook).subscribe(() => {
+      this.books$ = this.books$.pipe(map((books) => books))
+    })
   }
 
   saveChanges() {
@@ -49,6 +43,8 @@ export class AdminPageComponent implements OnInit {
   }
 
   createUser(data: CreateUserDTO) {
-    this._service.createUser(data).subscribe()
+    this.serviceProxy.createUser(data).subscribe(() => {
+      this.users$ = this.users$.pipe(map((users) => users))
+    })
   }
 }

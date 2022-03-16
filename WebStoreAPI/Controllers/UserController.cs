@@ -35,7 +35,7 @@ namespace WebStoreAPI.Controllers
         [HttpGet(Name = "getAllUsers")]
         public IEnumerable<AdminUserDTO> Get()
         {
-            var result = _userManager.Users.ToList().Select(user => new AdminUserDTO
+            var result = _userManager.Users.ToList().OrderBy( user => user.UserName).Select(user => new AdminUserDTO
             {
                 UserName = user.UserName,
                 Email = user.Email,
@@ -49,12 +49,15 @@ namespace WebStoreAPI.Controllers
             var user = new User { Email = createUserDTO.Email, UserName = createUserDTO.UserName };
             await _userManager.CreateAsync(user, createUserDTO.Password);
 
-            // bool adminRoleExists = await _roleManager.RoleExistsAsync("admin");
-            // if (!adminRoleExists)
-            // {
-            //     await _roleManager.CreateAsync(new IdentityRole("admin"));
-            // }
-            // var result2 = await _userManager.AddToRoleAsync(user, "admin");
+            if (createUserDTO.IsAdmin)
+            {
+                bool adminRoleExists = await _roleManager.RoleExistsAsync("admin");
+                if (!adminRoleExists)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole("admin"));
+                }
+                await _userManager.AddToRoleAsync(user, "admin");
+            }
 
 
             Claim userClaim = new Claim("name", createUserDTO.UserName);

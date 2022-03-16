@@ -23,6 +23,7 @@ export class UserInfoFormComponent implements OnInit, OnDestroy {
     username: new FormControl(''),
     email: new FormControl(''),
     password: new FormControl(''),
+    isAdmin: new FormControl(),
   })
 
   @Output() userInfo = new EventEmitter<CreateUserDTO>()

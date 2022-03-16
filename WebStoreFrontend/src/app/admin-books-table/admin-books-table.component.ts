@@ -7,7 +7,7 @@ import { CreateBookDTO } from 'src/shared/service-proxies/service-proxies'
   styleUrls: ['./admin-books-table.component.css'],
 })
 export class AdminBooksTableComponent {
-  @Input() books?: CreateBookDTO[]
+  @Input() books!: CreateBookDTO[] | null
 
   constructor() {}
 }

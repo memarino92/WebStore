@@ -32,7 +32,7 @@ namespace WebStoreAPI.Controllers
         }
 
         [HttpPost(Name = "CreateBook")]
-        public Book CreateBook([FromBody] CreateBookDTO book)
+        public async Task<CreateBookDTO> CreateBook([FromBody] CreateBookDTO book)
         {
             var newBook = new Book
             {
@@ -47,7 +47,9 @@ namespace WebStoreAPI.Controllers
             
             _webStoreContext.Book.Add(newBook);
             _webStoreContext.SaveChanges();
-            return newBook;
+            var bookToReturn = book;
+            bookToReturn.BookId = newBook.BookId;
+            return bookToReturn;
         }
 
         [HttpGet("/GetBooksForAdmin")]
