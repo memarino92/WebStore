@@ -13,8 +13,6 @@ import { CartService } from './cart.service'
   providers: [ServiceProxy, CartService],
 })
 export class AppComponent implements OnInit {
-  cartItems!: BookDTO[]
-
   constructor(
     private serviceProxy: ServiceProxy,
     private securityService: OidcSecurityService,
@@ -23,13 +21,15 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.securityService
       .checkAuth()
-      .subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {})
-    this.getCartItems()
+      .subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {
+        if (isAuthenticated) {
+          this.getCartItems()
+        }
+      })
   }
 
   getCartItems() {
     this.serviceProxy.cartItemsAll().subscribe((result) => {
-      this.cartItems = result
       this.cartService.updateCartItems(result)
     })
   }
