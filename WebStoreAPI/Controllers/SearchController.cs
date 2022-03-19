@@ -3,21 +3,21 @@
 
 namespace WebStoreAPI.Controllers
 {
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    [Route("[controller]")]
     public class SearchController : ControllerBase
     {
-        private readonly ILogger<BookController> _logger;
+        private readonly ILogger<CatalogController> _logger;
 
         private readonly WebStoreContext _webStoreContext;
 
-        public SearchController(ILogger<BookController> logger, WebStoreContext context)
+        public SearchController(ILogger<CatalogController> logger, WebStoreContext context)
         {
             _logger = logger;
             _webStoreContext = context;
         }
 
-        [HttpGet(Name = "search")]
+        [HttpGet(Name = "Search")]
         public IEnumerable<BookDTO> Get(string searchParams)
         {
             var result = _webStoreContext.Book.Where(x => x.Title.Contains(searchParams) || x.Author.Contains(searchParams)).Select(book => new BookDTO

@@ -6,8 +6,8 @@ using System.Security.Claims;
 namespace WebStoreAPI.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer",Roles ="admin")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -32,7 +32,7 @@ namespace WebStoreAPI.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Bearer")]
-        [HttpGet(Name = "getAllUsers")]
+        [HttpGet(Name = "GetAllUsers")]
         public IEnumerable<AdminUserDTO> Get()
         {
             var result = _userManager.Users.ToList().OrderBy( user => user.UserName).Select(user => new AdminUserDTO
@@ -43,7 +43,7 @@ namespace WebStoreAPI.Controllers
             return result;
         }
 
-        [HttpPost(Name = "createUser")]
+        [HttpPost(Name = "CreateUser")]
         public async Task<User> CreateUser([FromBody] CreateUserDTO createUserDTO)
         {
             var user = new User { Email = createUserDTO.Email, UserName = createUserDTO.UserName };
@@ -66,7 +66,7 @@ namespace WebStoreAPI.Controllers
             return user;
         }
 
-        [HttpPut(Name = "updateUserPassword")]
+        [HttpPut(Name = "UpdateUserPassword")]
         public async Task<AdminUserDTO> UpdateUserPassword([FromBody] UpdateUserPasswordDTO updateUserPasswordDTO)
         {
             var user = await _userManager.FindByNameAsync(updateUserPasswordDTO.UserName);

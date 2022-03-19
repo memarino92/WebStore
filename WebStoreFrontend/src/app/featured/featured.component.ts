@@ -17,7 +17,7 @@ export class FeaturedComponent {
 
   constructor(private serviceProxy: ServiceProxy) {
     this.books$ = this.serviceProxy
-      .books()
+      .getAllBooks()
       .pipe(map((books) => shuffleArray(books)))
   }
 }

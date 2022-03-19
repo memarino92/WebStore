@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   }
 
   getCartItems() {
-    this.serviceProxy.cartItemsAll().subscribe((result) => {
+    this.serviceProxy.getCartItemsForUser().subscribe((result) => {
       this.cartService.updateCartItems(result)
     })
   }

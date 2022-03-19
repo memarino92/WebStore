@@ -29,8 +29,8 @@ export class ServiceProxy {
     /**
      * @return Success
      */
-    books(): Observable<BookDTO[]> {
-        let url_ = this.baseUrl + "/Book";
+    getCartItemsForUser(): Observable<BookDTO[]> {
+        let url_ = this.baseUrl + "/api/Cart/GetCartItemsForUser";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -42,11 +42,11 @@ export class ServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processBooks(response_);
+            return this.processGetCartItemsForUser(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processBooks(response_ as any);
+                    return this.processGetCartItemsForUser(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<BookDTO[]>;
                 }
@@ -55,231 +55,7 @@ export class ServiceProxy {
         }));
     }
 
-    protected processBooks(response: HttpResponseBase): Observable<BookDTO[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(BookDTO.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<BookDTO[]>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    createBook(body: CreateBookDTO | undefined): Observable<CreateBookDTO> {
-        let url_ = this.baseUrl + "/Book";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateBook(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreateBook(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<CreateBookDTO>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<CreateBookDTO>;
-        }));
-    }
-
-    protected processCreateBook(response: HttpResponseBase): Observable<CreateBookDTO> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CreateBookDTO.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<CreateBookDTO>(null as any);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return Success
-     */
-    deleteBook(id: number | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/Book?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeleteBook(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeleteBook(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processDeleteBook(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(null as any);
-    }
-
-    /**
-     * @return Success
-     */
-    getBooksForAdmin(): Observable<CreateBookDTO[]> {
-        let url_ = this.baseUrl + "/GetBooksForAdmin";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetBooksForAdmin(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetBooksForAdmin(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<CreateBookDTO[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<CreateBookDTO[]>;
-        }));
-    }
-
-    protected processGetBooksForAdmin(response: HttpResponseBase): Observable<CreateBookDTO[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(CreateBookDTO.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<CreateBookDTO[]>(null as any);
-    }
-
-    /**
-     * @return Success
-     */
-    cartItemsAll(): Observable<BookDTO[]> {
-        let url_ = this.baseUrl + "/api/CartItems";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCartItemsAll(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCartItemsAll(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<BookDTO[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<BookDTO[]>;
-        }));
-    }
-
-    protected processCartItemsAll(response: HttpResponseBase): Observable<BookDTO[]> {
+    protected processGetCartItemsForUser(response: HttpResponseBase): Observable<BookDTO[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -313,7 +89,7 @@ export class ServiceProxy {
      * @return Success
      */
     addItemToCart(body: CreateCartItemDTO | undefined): Observable<BookDTO[]> {
-        let url_ = this.baseUrl + "/api/CartItems";
+        let url_ = this.baseUrl + "/api/Cart/AddItemToCart";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -374,11 +150,8 @@ export class ServiceProxy {
     /**
      * @return Success
      */
-    cartItemsGET(id: string): Observable<CartItem> {
-        let url_ = this.baseUrl + "/api/CartItems/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    getAllBooks(): Observable<BookDTO[]> {
+        let url_ = this.baseUrl + "/api/Catalog/Get";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -390,20 +163,20 @@ export class ServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCartItemsGET(response_);
+            return this.processGetAllBooks(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCartItemsGET(response_ as any);
+                    return this.processGetAllBooks(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<CartItem>;
+                    return _observableThrow(e) as any as Observable<BookDTO[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<CartItem>;
+                return _observableThrow(response_) as any as Observable<BookDTO[]>;
         }));
     }
 
-    protected processCartItemsGET(response: HttpResponseBase): Observable<CartItem> {
+    protected processGetAllBooks(response: HttpResponseBase): Observable<BookDTO[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -414,7 +187,14 @@ export class ServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CartItem.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(BookDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -422,18 +202,15 @@ export class ServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<CartItem>(null as any);
+        return _observableOf<BookDTO[]>(null as any);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    cartItemsPUT(id: string, body: CartItem | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/CartItems/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    createBook(body: CreateBookDTO | undefined): Observable<CreateBookDTO> {
+        let url_ = this.baseUrl + "/api/Catalog/CreateBook";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -444,24 +221,25 @@ export class ServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
+                "Accept": "text/plain"
             })
         };
 
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCartItemsPUT(response_);
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateBook(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCartItemsPUT(response_ as any);
+                    return this.processCreateBook(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<CreateBookDTO>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<CreateBookDTO>;
         }));
     }
 
-    protected processCartItemsPUT(response: HttpResponseBase): Observable<void> {
+    protected processCreateBook(response: HttpResponseBase): Observable<CreateBookDTO> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -470,24 +248,87 @@ export class ServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CreateBookDTO.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(null as any);
+        return _observableOf<CreateBookDTO>(null as any);
     }
 
     /**
      * @return Success
      */
-    cartItemsDELETE(id: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/CartItems/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    getBooksForAdmin(): Observable<CreateBookDTO[]> {
+        let url_ = this.baseUrl + "/api/Catalog/GetBooksForAdmin";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetBooksForAdmin(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetBooksForAdmin(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CreateBookDTO[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CreateBookDTO[]>;
+        }));
+    }
+
+    protected processGetBooksForAdmin(response: HttpResponseBase): Observable<CreateBookDTO[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CreateBookDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CreateBookDTO[]>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    deleteBook(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Catalog/DeleteBook?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -498,11 +339,11 @@ export class ServiceProxy {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCartItemsDELETE(response_);
+            return this.processDeleteBook(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCartItemsDELETE(response_ as any);
+                    return this.processDeleteBook(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -511,7 +352,7 @@ export class ServiceProxy {
         }));
     }
 
-    protected processCartItemsDELETE(response: HttpResponseBase): Observable<void> {
+    protected processDeleteBook(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -533,8 +374,8 @@ export class ServiceProxy {
     /**
      * @return Success
      */
-    categories(category: string): Observable<BookDTO[]> {
-        let url_ = this.baseUrl + "/Categories/{category}";
+    getBooksByCategory(category: string): Observable<BookDTO[]> {
+        let url_ = this.baseUrl + "/api/Catalog/GetBooksByCategory/{category}";
         if (category === undefined || category === null)
             throw new Error("The parameter 'category' must be defined.");
         url_ = url_.replace("{category}", encodeURIComponent("" + category));
@@ -549,11 +390,11 @@ export class ServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCategories(response_);
+            return this.processGetBooksByCategory(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCategories(response_ as any);
+                    return this.processGetBooksByCategory(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<BookDTO[]>;
                 }
@@ -562,7 +403,7 @@ export class ServiceProxy {
         }));
     }
 
-    protected processCategories(response: HttpResponseBase): Observable<BookDTO[]> {
+    protected processGetBooksByCategory(response: HttpResponseBase): Observable<BookDTO[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -595,7 +436,7 @@ export class ServiceProxy {
      * @return Success
      */
     getOrdersForUser(): Observable<OrderDTO[]> {
-        let url_ = this.baseUrl + "/api/Orders";
+        let url_ = this.baseUrl + "/api/Orders/GetOrdersForUser";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -652,8 +493,8 @@ export class ServiceProxy {
     /**
      * @return Success
      */
-    ordersPOST(): Observable<OrderDTO> {
-        let url_ = this.baseUrl + "/api/Orders";
+    placeOrder(): Observable<OrderDTO> {
+        let url_ = this.baseUrl + "/api/Orders/PlaceOrder";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -665,11 +506,11 @@ export class ServiceProxy {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processOrdersPOST(response_);
+            return this.processPlaceOrder(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processOrdersPOST(response_ as any);
+                    return this.processPlaceOrder(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<OrderDTO>;
                 }
@@ -678,7 +519,7 @@ export class ServiceProxy {
         }));
     }
 
-    protected processOrdersPOST(response: HttpResponseBase): Observable<OrderDTO> {
+    protected processPlaceOrder(response: HttpResponseBase): Observable<OrderDTO> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -701,170 +542,11 @@ export class ServiceProxy {
     }
 
     /**
-     * @return Success
-     */
-    ordersGET(id: number): Observable<Order> {
-        let url_ = this.baseUrl + "/api/Orders/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processOrdersGET(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processOrdersGET(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Order>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Order>;
-        }));
-    }
-
-    protected processOrdersGET(response: HttpResponseBase): Observable<Order> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Order.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<Order>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    ordersPUT(id: number, body: Order | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/Orders/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processOrdersPUT(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processOrdersPUT(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processOrdersPUT(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(null as any);
-    }
-
-    /**
-     * @return Success
-     */
-    ordersDELETE(id: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Orders/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processOrdersDELETE(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processOrdersDELETE(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processOrdersDELETE(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(null as any);
-    }
-
-    /**
      * @param searchParams (optional) 
      * @return Success
      */
     search(searchParams: string | undefined): Observable<BookDTO[]> {
-        let url_ = this.baseUrl + "/Search?";
+        let url_ = this.baseUrl + "/api/Search/Get?";
         if (searchParams === null)
             throw new Error("The parameter 'searchParams' cannot be null.");
         else if (searchParams !== undefined)
@@ -926,7 +608,7 @@ export class ServiceProxy {
      * @return Success
      */
     getAllUsers(): Observable<AdminUserDTO[]> {
-        let url_ = this.baseUrl + "/User";
+        let url_ = this.baseUrl + "/api/User/Get";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -985,7 +667,7 @@ export class ServiceProxy {
      * @return Success
      */
     createUser(body: CreateUserDTO | undefined): Observable<User> {
-        let url_ = this.baseUrl + "/User";
+        let url_ = this.baseUrl + "/api/User/CreateUser";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -1041,7 +723,7 @@ export class ServiceProxy {
      * @return Success
      */
     updateUserPassword(body: UpdateUserPasswordDTO | undefined): Observable<AdminUserDTO> {
-        let url_ = this.baseUrl + "/User";
+        let url_ = this.baseUrl + "/api/User/UpdateUserPassword";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
