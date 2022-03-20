@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core'
-import { Book } from 'src/shared/service-proxies/service-proxies'
+import { BookDTO } from 'src/shared/service-proxies/service-proxies'
 
 @Component({
   selector: 'app-book-list',
@@ -7,7 +7,7 @@ import { Book } from 'src/shared/service-proxies/service-proxies'
   styleUrls: ['./book-list.component.css'],
 })
 export class BookListComponent {
-  @Input() books!: Book[] | null
+  @Input() books!: BookDTO[] | null
 
   constructor() {}
 }

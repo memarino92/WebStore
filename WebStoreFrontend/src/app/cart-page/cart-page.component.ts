@@ -25,7 +25,7 @@ export class CartPageComponent implements OnInit {
   }
 
   getCartItems() {
-    this.serviceProxy.cartItemsAll().subscribe((result) => {
+    this.serviceProxy.getCartItemsForUser().subscribe((result) => {
       this.cartItems = result
       this.cartService.updateCartItems(result)
     })
@@ -39,7 +39,7 @@ export class CartPageComponent implements OnInit {
   }
 
   createOrder() {
-    this.serviceProxy.ordersPOST().subscribe(() => {
+    this.serviceProxy.placeOrder().subscribe(() => {
       this.router.navigate(['/orders'])
     })
   }

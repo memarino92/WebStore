@@ -25,7 +25,7 @@ export class CategoryPageComponent implements OnInit {
   getBooksInCategory() {
     if (!this.category) return
 
-    this.serviceProxy.categories(this.category).subscribe((result) => {
+    this.serviceProxy.getBooksByCategory(this.category).subscribe((result) => {
       this.angularSearchService.updateSearchResults(result)
     })
   }

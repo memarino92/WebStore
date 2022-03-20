@@ -3,7 +3,7 @@ import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 import {
   ServiceProxy,
-  Book,
+  BookDTO,
 } from '../../shared/service-proxies/service-proxies'
 
 @Component({
@@ -13,11 +13,11 @@ import {
   providers: [ServiceProxy],
 })
 export class FeaturedComponent {
-  books$: Observable<Book[]>
+  books$: Observable<BookDTO[]>
 
   constructor(private serviceProxy: ServiceProxy) {
     this.books$ = this.serviceProxy
-      .books()
+      .getAllBooks()
       .pipe(map((books) => shuffleArray(books)))
   }
 }
