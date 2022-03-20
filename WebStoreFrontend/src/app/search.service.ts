@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core'
 import { Subject } from 'rxjs'
-import { Book } from 'src/shared/service-proxies/service-proxies'
+import { BookDTO } from 'src/shared/service-proxies/service-proxies'
 
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService {
   // Observable string sources
-  private searchResultsSource = new Subject<Book[]>()
+  private searchResultsSource = new Subject<BookDTO[]>()
   private searchParamsSource = new Subject<string>()
 
   // Observable string streams
@@ -15,7 +15,7 @@ export class SearchService {
   searchParams$ = this.searchParamsSource.asObservable()
 
   // Service message commands
-  updateSearchResults(books: Book[]) {
+  updateSearchResults(books: BookDTO[]) {
     this.searchResultsSource.next(books)
   }
 

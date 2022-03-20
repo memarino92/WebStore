@@ -666,7 +666,7 @@ export class ServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    createUser(body: CreateUserDTO | undefined): Observable<User> {
+    createUser(body: CreateUserDTO | undefined): Observable<CreateUserDTO> {
         let url_ = this.baseUrl + "/api/User/CreateUser";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -689,14 +689,14 @@ export class ServiceProxy {
                 try {
                     return this.processCreateUser(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<User>;
+                    return _observableThrow(e) as any as Observable<CreateUserDTO>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<User>;
+                return _observableThrow(response_) as any as Observable<CreateUserDTO>;
         }));
     }
 
-    protected processCreateUser(response: HttpResponseBase): Observable<User> {
+    protected processCreateUser(response: HttpResponseBase): Observable<CreateUserDTO> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -707,7 +707,7 @@ export class ServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = User.fromJS(resultData200);
+            result200 = CreateUserDTO.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -715,7 +715,7 @@ export class ServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<User>(null as any);
+        return _observableOf<CreateUserDTO>(null as any);
     }
 
     /**
@@ -815,82 +815,6 @@ export interface IAdminUserDTO {
     email?: string | undefined;
 }
 
-export class Book implements IBook {
-    bookId?: number;
-    createdAt?: Date;
-    title?: string | undefined;
-    author?: string | undefined;
-    imageUrl?: string | undefined;
-    category?: string | undefined;
-    cost?: number;
-    markup?: number;
-    items?: CartItem[] | undefined;
-
-    constructor(data?: IBook) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.bookId = _data["bookId"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
-            this.title = _data["title"];
-            this.author = _data["author"];
-            this.imageUrl = _data["imageUrl"];
-            this.category = _data["category"];
-            this.cost = _data["cost"];
-            this.markup = _data["markup"];
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(CartItem.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Book {
-        data = typeof data === 'object' ? data : {};
-        let result = new Book();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["bookId"] = this.bookId;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
-        data["title"] = this.title;
-        data["author"] = this.author;
-        data["imageUrl"] = this.imageUrl;
-        data["category"] = this.category;
-        data["cost"] = this.cost;
-        data["markup"] = this.markup;
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IBook {
-    bookId?: number;
-    createdAt?: Date;
-    title?: string | undefined;
-    author?: string | undefined;
-    imageUrl?: string | undefined;
-    category?: string | undefined;
-    cost?: number;
-    markup?: number;
-    items?: CartItem[] | undefined;
-}
-
 export class BookDTO implements IBookDTO {
     bookId?: number;
     title?: string | undefined;
@@ -941,126 +865,6 @@ export interface IBookDTO {
     author?: string | undefined;
     imageUrl?: string | undefined;
     price?: number;
-}
-
-export class Cart implements ICart {
-    cartId?: number;
-    createdAt?: Date;
-    userId?: string | undefined;
-    user?: User;
-    isActive?: boolean;
-    items?: CartItem[] | undefined;
-
-    constructor(data?: ICart) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.cartId = _data["cartId"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
-            this.userId = _data["userId"];
-            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
-            this.isActive = _data["isActive"];
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(CartItem.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Cart {
-        data = typeof data === 'object' ? data : {};
-        let result = new Cart();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["cartId"] = this.cartId;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
-        data["userId"] = this.userId;
-        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        data["isActive"] = this.isActive;
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface ICart {
-    cartId?: number;
-    createdAt?: Date;
-    userId?: string | undefined;
-    user?: User;
-    isActive?: boolean;
-    items?: CartItem[] | undefined;
-}
-
-export class CartItem implements ICartItem {
-    cartItemId?: string | undefined;
-    createdAt?: Date;
-    bookId?: number;
-    book?: Book;
-    cartId?: number;
-    cart?: Cart;
-
-    constructor(data?: ICartItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.cartItemId = _data["cartItemId"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
-            this.bookId = _data["bookId"];
-            this.book = _data["book"] ? Book.fromJS(_data["book"]) : <any>undefined;
-            this.cartId = _data["cartId"];
-            this.cart = _data["cart"] ? Cart.fromJS(_data["cart"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): CartItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new CartItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["cartItemId"] = this.cartItemId;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
-        data["bookId"] = this.bookId;
-        data["book"] = this.book ? this.book.toJSON() : <any>undefined;
-        data["cartId"] = this.cartId;
-        data["cart"] = this.cart ? this.cart.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface ICartItem {
-    cartItemId?: string | undefined;
-    createdAt?: Date;
-    bookId?: number;
-    book?: Book;
-    cartId?: number;
-    cart?: Cart;
 }
 
 export class CreateBookDTO implements ICreateBookDTO {
@@ -1207,66 +1011,6 @@ export interface ICreateUserDTO {
     isAdmin?: boolean;
 }
 
-export class Order implements IOrder {
-    orderId?: number;
-    createdAt?: Date;
-    userId?: string | undefined;
-    user?: User;
-    items?: OrderItem[] | undefined;
-
-    constructor(data?: IOrder) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.orderId = _data["orderId"];
-            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
-            this.userId = _data["userId"];
-            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(OrderItem.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Order {
-        data = typeof data === 'object' ? data : {};
-        let result = new Order();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["orderId"] = this.orderId;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
-        data["userId"] = this.userId;
-        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IOrder {
-    orderId?: number;
-    createdAt?: Date;
-    userId?: string | undefined;
-    user?: User;
-    items?: OrderItem[] | undefined;
-}
-
 export class OrderDTO implements IOrderDTO {
     orderId?: number;
     userId?: string | undefined;
@@ -1319,58 +1063,6 @@ export interface IOrderDTO {
     bookDTOs?: BookDTO[] | undefined;
 }
 
-export class OrderItem implements IOrderItem {
-    orderItemId?: number;
-    bookId?: number;
-    book?: Book;
-    orderId?: number;
-    order?: Order;
-
-    constructor(data?: IOrderItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.orderItemId = _data["orderItemId"];
-            this.bookId = _data["bookId"];
-            this.book = _data["book"] ? Book.fromJS(_data["book"]) : <any>undefined;
-            this.orderId = _data["orderId"];
-            this.order = _data["order"] ? Order.fromJS(_data["order"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): OrderItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new OrderItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["orderItemId"] = this.orderItemId;
-        data["bookId"] = this.bookId;
-        data["book"] = this.book ? this.book.toJSON() : <any>undefined;
-        data["orderId"] = this.orderId;
-        data["order"] = this.order ? this.order.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IOrderItem {
-    orderItemId?: number;
-    bookId?: number;
-    book?: Book;
-    orderId?: number;
-    order?: Order;
-}
-
 export class UpdateUserPasswordDTO implements IUpdateUserPasswordDTO {
     userName?: string | undefined;
     password?: string | undefined;
@@ -1409,122 +1101,6 @@ export class UpdateUserPasswordDTO implements IUpdateUserPasswordDTO {
 export interface IUpdateUserPasswordDTO {
     userName?: string | undefined;
     password?: string | undefined;
-}
-
-export class User implements IUser {
-    id?: string | undefined;
-    userName?: string | undefined;
-    normalizedUserName?: string | undefined;
-    email?: string | undefined;
-    normalizedEmail?: string | undefined;
-    emailConfirmed?: boolean;
-    passwordHash?: string | undefined;
-    securityStamp?: string | undefined;
-    concurrencyStamp?: string | undefined;
-    phoneNumber?: string | undefined;
-    phoneNumberConfirmed?: boolean;
-    twoFactorEnabled?: boolean;
-    lockoutEnd?: Date | undefined;
-    lockoutEnabled?: boolean;
-    accessFailedCount?: number;
-    carts?: Cart[] | undefined;
-    orders?: Order[] | undefined;
-
-    constructor(data?: IUser) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.userName = _data["userName"];
-            this.normalizedUserName = _data["normalizedUserName"];
-            this.email = _data["email"];
-            this.normalizedEmail = _data["normalizedEmail"];
-            this.emailConfirmed = _data["emailConfirmed"];
-            this.passwordHash = _data["passwordHash"];
-            this.securityStamp = _data["securityStamp"];
-            this.concurrencyStamp = _data["concurrencyStamp"];
-            this.phoneNumber = _data["phoneNumber"];
-            this.phoneNumberConfirmed = _data["phoneNumberConfirmed"];
-            this.twoFactorEnabled = _data["twoFactorEnabled"];
-            this.lockoutEnd = _data["lockoutEnd"] ? new Date(_data["lockoutEnd"].toString()) : <any>undefined;
-            this.lockoutEnabled = _data["lockoutEnabled"];
-            this.accessFailedCount = _data["accessFailedCount"];
-            if (Array.isArray(_data["carts"])) {
-                this.carts = [] as any;
-                for (let item of _data["carts"])
-                    this.carts!.push(Cart.fromJS(item));
-            }
-            if (Array.isArray(_data["orders"])) {
-                this.orders = [] as any;
-                for (let item of _data["orders"])
-                    this.orders!.push(Order.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): User {
-        data = typeof data === 'object' ? data : {};
-        let result = new User();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["userName"] = this.userName;
-        data["normalizedUserName"] = this.normalizedUserName;
-        data["email"] = this.email;
-        data["normalizedEmail"] = this.normalizedEmail;
-        data["emailConfirmed"] = this.emailConfirmed;
-        data["passwordHash"] = this.passwordHash;
-        data["securityStamp"] = this.securityStamp;
-        data["concurrencyStamp"] = this.concurrencyStamp;
-        data["phoneNumber"] = this.phoneNumber;
-        data["phoneNumberConfirmed"] = this.phoneNumberConfirmed;
-        data["twoFactorEnabled"] = this.twoFactorEnabled;
-        data["lockoutEnd"] = this.lockoutEnd ? this.lockoutEnd.toISOString() : <any>undefined;
-        data["lockoutEnabled"] = this.lockoutEnabled;
-        data["accessFailedCount"] = this.accessFailedCount;
-        if (Array.isArray(this.carts)) {
-            data["carts"] = [];
-            for (let item of this.carts)
-                data["carts"].push(item.toJSON());
-        }
-        if (Array.isArray(this.orders)) {
-            data["orders"] = [];
-            for (let item of this.orders)
-                data["orders"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IUser {
-    id?: string | undefined;
-    userName?: string | undefined;
-    normalizedUserName?: string | undefined;
-    email?: string | undefined;
-    normalizedEmail?: string | undefined;
-    emailConfirmed?: boolean;
-    passwordHash?: string | undefined;
-    securityStamp?: string | undefined;
-    concurrencyStamp?: string | undefined;
-    phoneNumber?: string | undefined;
-    phoneNumberConfirmed?: boolean;
-    twoFactorEnabled?: boolean;
-    lockoutEnd?: Date | undefined;
-    lockoutEnabled?: boolean;
-    accessFailedCount?: number;
-    carts?: Cart[] | undefined;
-    orders?: Order[] | undefined;
 }
 
 export class ApiException extends Error {

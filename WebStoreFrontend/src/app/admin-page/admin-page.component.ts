@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { Observable, Subject } from 'rxjs'
 import { map } from 'rxjs/operators'
 import {
   ServiceProxy,
-  Book,
   AdminUserDTO,
   CreateUserDTO,
   CreateBookDTO,
@@ -26,7 +25,7 @@ export class AdminPageComponent {
     this.users$ = this.serviceProxy.getAllUsers()
   }
 
-  createBook(book: Book) {
+  createBook(book: CreateBookDTO) {
     let newBook = new CreateBookDTO(book)
 
     this.serviceProxy.createBook(newBook).subscribe(() => {

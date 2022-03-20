@@ -18,17 +18,26 @@ namespace WebStoreAPI.Controllers
         }
 
         [HttpGet(Name = "Search")]
-        public IEnumerable<BookDTO> Get(string searchParams)
+        public async Task<ActionResult<IEnumerable<BookDTO>>> Get(string searchParams)
         {
-            var result = _webStoreContext.Book.Where(x => x.Title.Contains(searchParams) || x.Author.Contains(searchParams)).Select(book => new BookDTO
+            try
+            {
+                var result = _webStoreContext.Book.Where(x => x.Title.Contains(searchParams) || x.Author.Contains(searchParams)).Select(book => new BookDTO
             {
                 Author = book.Author,
                 Title = book.Title,
                 BookId = book.BookId,
                 ImageUrl = book.ImageUrl,
                 Price = book.GetPrice(),
-            });
-            return result;
+            }).ToList();
+            return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
+            
         }
     }
 }

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core'
-import { AdminUserDTO, User } from 'src/shared/service-proxies/service-proxies'
+import { AdminUserDTO } from 'src/shared/service-proxies/service-proxies'
 
 @Component({
   selector: 'app-users-table',

@@ -33,54 +33,82 @@ namespace WebStoreAPI.Controllers
 
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet(Name = "GetAllUsers")]
-        public IEnumerable<AdminUserDTO> Get()
+        public async Task<ActionResult<IEnumerable<AdminUserDTO>>> Get()
         {
-            var result = _userManager.Users.ToList().OrderBy( user => user.UserName).Select(user => new AdminUserDTO
+            try
             {
-                UserName = user.UserName,
-                Email = user.Email,
-            });
-            return result;
+                var result = _webStoreContext.Users.OrderBy(user => user.UserName).Select(user => new AdminUserDTO
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                }).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
+            
         }
 
         [HttpPost(Name = "CreateUser")]
-        public async Task<User> CreateUser([FromBody] CreateUserDTO createUserDTO)
+        public async Task<ActionResult<CreateUserDTO>> CreateUser([FromBody] CreateUserDTO createUserDTO)
         {
-            var user = new User { Email = createUserDTO.Email, UserName = createUserDTO.UserName };
-            await _userManager.CreateAsync(user, createUserDTO.Password);
-
-            if (createUserDTO.IsAdmin)
+            try
             {
-                bool adminRoleExists = await _roleManager.RoleExistsAsync("admin");
-                if (!adminRoleExists)
+                var user = new User { Email = createUserDTO.Email, UserName = createUserDTO.UserName };
+                await _userManager.CreateAsync(user, createUserDTO.Password);
+
+                if (createUserDTO.IsAdmin)
                 {
-                    await _roleManager.CreateAsync(new IdentityRole("admin"));
+                    bool adminRoleExists = await _roleManager.RoleExistsAsync("admin");
+                    if (!adminRoleExists)
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole("admin"));
+                    }
+                    await _userManager.AddToRoleAsync(user, "admin");
                 }
-                await _userManager.AddToRoleAsync(user, "admin");
+
+
+                Claim userClaim = new Claim("name", createUserDTO.UserName);
+                await _userManager.AddClaimAsync(user, userClaim);
+
+                
+
+                return Ok(createUserDTO);
             }
-
-
-            Claim userClaim = new Claim("name", createUserDTO.UserName);
-            await _userManager.AddClaimAsync(user, userClaim);
-
-            return user;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
         }
 
         [HttpPut(Name = "UpdateUserPassword")]
-        public async Task<AdminUserDTO> UpdateUserPassword([FromBody] UpdateUserPasswordDTO updateUserPasswordDTO)
+        public async Task<ActionResult<AdminUserDTO>> UpdateUserPassword([FromBody] UpdateUserPasswordDTO updateUserPasswordDTO)
         {
-            var user = await _userManager.FindByNameAsync(updateUserPasswordDTO.UserName);
-
-            await _userManager.RemovePasswordAsync(user);
-            await _userManager.AddPasswordAsync(user, updateUserPasswordDTO.Password);
-
-            var responseAdminUserDTO = new AdminUserDTO
+            try
             {
-                Email = user?.Email,
-                UserName = user?.UserName,
-            };
+                var user = await _userManager.FindByNameAsync(updateUserPasswordDTO.UserName);
 
-            return responseAdminUserDTO;
+                await _userManager.RemovePasswordAsync(user);
+                await _userManager.AddPasswordAsync(user, updateUserPasswordDTO.Password);
+
+                var responseAdminUserDTO = new AdminUserDTO
+                {
+                    Email = user?.Email,
+                    UserName = user?.UserName,
+                };
+
+                return Ok(responseAdminUserDTO);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
+            
         }
     }
 }

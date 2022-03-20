@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { OidcSecurityService } from 'angular-auth-oidc-client'
-import {
-  BookDTO,
-  ServiceProxy,
-} from 'src/shared/service-proxies/service-proxies'
+import { ServiceProxy } from 'src/shared/service-proxies/service-proxies'
 import { CartService } from './cart.service'
 
 @Component({

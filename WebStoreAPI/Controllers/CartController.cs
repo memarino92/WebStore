@@ -18,11 +18,13 @@ namespace WebStoreAPI.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
+        private readonly ILogger<CartController> _logger;
         private readonly WebStoreContext _context;
         private readonly UserManager<User> _userManager;
 
-        public CartController(WebStoreContext context, UserManager<User> userManager)
+        public CartController(ILogger<CartController> logger, WebStoreContext context, UserManager<User> userManager)
         {
+            _logger = logger;
             _context = context;
             _userManager = userManager;
 
@@ -32,31 +34,40 @@ namespace WebStoreAPI.Controllers
         [HttpGet(Name = "GetCartItemsForUser")]
         public async Task<ActionResult<IEnumerable<BookDTO>>> GetCartItemsForUser()
         {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            if (user == null)
-            { return BadRequest(); }
-
-            var cart = await _context.Cart.Where(cart => cart.UserId == user.Id && cart.IsActive == true).FirstOrDefaultAsync();
-            if (cart == null)
+            try
             {
-                var newCart = new Cart
+                var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                if (user == null)
+                { return BadRequest(); }
+
+                var cart = await _context.Cart.Where(cart => cart.UserId == user.Id && cart.IsActive == true).FirstOrDefaultAsync();
+                if (cart == null)
                 {
-                    UserId = user.Id,
-                    CreatedAt = DateTime.Now,
-                    IsActive = true
-                };
-                _context.Cart.Add(newCart);
-                await _context.SaveChangesAsync();
-                cart = newCart;
+                    var newCart = new Cart
+                    {
+                        UserId = user.Id,
+                        CreatedAt = DateTime.Now,
+                        IsActive = true
+                    };
+                    _context.Cart.Add(newCart);
+                    await _context.SaveChangesAsync();
+                    cart = newCart;
+                }
+
+                var cartItems = await _context.CartItem.Where(item => item.CartId == cart.CartId).ToListAsync();
+                List<int> bookIds = cartItems.Select(cartItem => cartItem.BookId).ToList();
+                var books = await _context.Book.Where(book => bookIds.Contains(book.BookId)).ToListAsync();
+                var actualBooks = bookIds.Select(bookId => books.Find(book => book.BookId == bookId));
+                var response = actualBooks.Select(book => new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.GetPrice() });
+
+                return Ok(response);
             }
-
-            var cartItems = await _context.CartItem.Where(item => item.CartId == cart.CartId).ToListAsync();
-            List<int> bookIds = cartItems.Select(cartItem => cartItem.BookId).ToList();
-            var books = await _context.Book.Where(book => bookIds.Contains(book.BookId)).ToListAsync();
-            var actualBooks = bookIds.Select(bookId => books.Find(book => book.BookId == bookId));
-            var response = actualBooks.Select(book => new BookDTO { BookId = book.BookId,Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.GetPrice()});
-
-            return Ok(response);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
+            
         }
 
         // POST: api/CartItems
@@ -64,54 +75,63 @@ namespace WebStoreAPI.Controllers
         [HttpPost(Name = "AddItemToCart")]
         public async Task<ActionResult<List<BookDTO>>> AddItemToCart(CreateCartItemDTO cartItem)
         {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            if (user == null)
-            { return BadRequest(); }
-            
-            var cart = await _context.Cart.Where(cart => cart.UserId == user.Id && cart.IsActive == true).FirstOrDefaultAsync();
-            if (cart == null)
-            {
-                var newCart = new Cart
-                {
-                    UserId = user.Id,
-                    CreatedAt = DateTime.Now,
-                    IsActive = true
-                };
-                _context.Cart.Add(newCart);
-                await _context.SaveChangesAsync();
-                cart = newCart;
-            }
-
-            var newCartItem = new CartItem
-            {
-                CartItemId = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.Now,
-                BookId = cartItem.BookId, 
-                CartId = cart.CartId
-            };
-            _context.CartItem.Add(newCartItem);
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                throw;
-            }
-            var book = await _context.Book.FindAsync(cartItem.BookId);
-            var bookAddedToCart = new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.GetPrice() };
+                var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                if (user == null)
+                { return BadRequest(); }
 
-            var cartItems = _context.CartItem.Where(cartItem => cartItem.CartId == cart.CartId)
-                .Select(cartItem => new BookDTO
+                var cart = await _context.Cart.Where(cart => cart.UserId == user.Id && cart.IsActive == true).FirstOrDefaultAsync();
+                if (cart == null)
                 {
-                    BookId = cartItem.BookId,
-                    Title = cartItem.Book.Title, 
-                    Author = cartItem.Book.Author,
-                    ImageUrl = cartItem.Book.ImageUrl,
-                    Price = cartItem.Book.Cost * (1 + cartItem.Book.Markup / 100)
-                }).ToList();
+                    var newCart = new Cart
+                    {
+                        UserId = user.Id,
+                        CreatedAt = DateTime.Now,
+                        IsActive = true
+                    };
+                    _context.Cart.Add(newCart);
+                    await _context.SaveChangesAsync();
+                    cart = newCart;
+                }
 
-            return Ok(cartItems);
+                var newCartItem = new CartItem
+                {
+                    CartItemId = Guid.NewGuid().ToString(),
+                    CreatedAt = DateTime.Now,
+                    BookId = cartItem.BookId,
+                    CartId = cart.CartId
+                };
+                _context.CartItem.Add(newCartItem);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    throw;
+                }
+                var book = await _context.Book.FindAsync(cartItem.BookId);
+                var bookAddedToCart = new BookDTO { BookId = book.BookId, Title = book.Title, Author = book.Author, ImageUrl = book.ImageUrl, Price = book.GetPrice() };
+
+                var cartItems = _context.CartItem.Where(cartItem => cartItem.CartId == cart.CartId)
+                    .Select(cartItem => new BookDTO
+                    {
+                        BookId = cartItem.BookId,
+                        Title = cartItem.Book.Title,
+                        Author = cartItem.Book.Author,
+                        ImageUrl = cartItem.Book.ImageUrl,
+                        Price = cartItem.Book.Cost * (1 + cartItem.Book.Markup / 100)
+                    }).ToList();
+
+                return Ok(cartItems);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
+            
         }
     }
 }

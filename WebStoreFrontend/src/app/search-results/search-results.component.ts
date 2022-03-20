@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { Observable } from 'rxjs'
-import { Book } from 'src/shared/service-proxies/service-proxies'
+import { BookDTO } from 'src/shared/service-proxies/service-proxies'
 import { SearchService } from '../search.service'
 
 @Component({
@@ -9,7 +9,7 @@ import { SearchService } from '../search.service'
   styleUrls: ['./search-results.component.css'],
 })
 export class SearchResultsComponent {
-  searchResults$: Observable<Book[]>
+  searchResults$: Observable<BookDTO[]>
 
   constructor(private angularSearchService: SearchService) {
     this.searchResults$ = angularSearchService.searchResults$

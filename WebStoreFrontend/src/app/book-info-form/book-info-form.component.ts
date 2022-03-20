@@ -8,7 +8,7 @@ import {
 } from '@angular/core'
 import { FormGroup, FormControl } from '@angular/forms'
 import { Observable, Subscription } from 'rxjs'
-import { Book } from 'src/shared/service-proxies/service-proxies'
+import { BookDTO } from 'src/shared/service-proxies/service-proxies'
 
 @Component({
   selector: 'app-book-info-form',
@@ -29,7 +29,7 @@ export class BookInfoFormComponent implements OnInit, OnDestroy {
 
   imageUrl: string = ''
 
-  @Output() bookInfo = new EventEmitter<Book>()
+  @Output() bookInfo = new EventEmitter<BookDTO>()
   constructor() {}
 
   ngOnInit(): void {
