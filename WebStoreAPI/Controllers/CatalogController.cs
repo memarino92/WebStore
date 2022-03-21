@@ -70,6 +70,35 @@ namespace WebStoreAPI.Controllers
             
         }
 
+        [HttpPut(Name = "UpdateBook")]
+        public async Task<ActionResult<CreateBookDTO>> UpdateBook([FromBody] CreateBookDTO book)
+        {
+            try
+            {
+                var bookToUpdate = await _webStoreContext.Book.FindAsync(book.BookId);
+                if (bookToUpdate == null)
+                {
+                    return BadRequest();
+                }
+
+                bookToUpdate.Author = book.Author;
+                bookToUpdate.Title = book.Title;
+                bookToUpdate.Cost = book.Cost;
+                bookToUpdate.Markup = book.Markup;
+                bookToUpdate.Category = book.Category;
+
+
+                _webStoreContext.SaveChanges();
+                return Ok(book);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
+
+        }
+
         [HttpGet(Name = "GetBooksForAdmin")]
         public async Task<ActionResult<IEnumerable<CreateBookDTO>>> GetBooksForAdmin()
         {

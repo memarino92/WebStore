@@ -20,7 +20,7 @@ namespace WebStoreAPI
         public List<CartItem> Items { get; set; }
         public decimal GetPrice()
         {
-            return Cost * 1 + Markup / 100;
+            return this.Cost * (1 + this.Markup / 100);
         }
     }
 
