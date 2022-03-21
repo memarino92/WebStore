@@ -5,6 +5,7 @@ import { OidcSecurityService, UserDataResult } from 'angular-auth-oidc-client'
 import { CartService } from '../cart.service'
 import { BookDTO } from 'src/shared/service-proxies/service-proxies'
 import { Observable } from 'rxjs'
+import * as mdb from 'mdb-ui-kit' // lib
 
 @Component({
   selector: 'app-navbar',
@@ -49,7 +50,17 @@ export class NavbarComponent implements OnInit {
   authenticateWithPopup() {
     this.oidcSecurityService.authorizeWithPopUp().subscribe()
   }
+
   logout() {
     this.oidcSecurityService.logoff()
+  }
+
+  openUserDropdown() {
+    const dropdownRawElement = document.getElementById('userDropdown')
+    const dropdown = new mdb.Dropdown(document.getElementById('userDropdown'))
+    dropdown.show()
+    if (dropdownRawElement) {
+      dropdownRawElement.style.opacity = '1'
+    }
   }
 }
