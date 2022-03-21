@@ -46,11 +46,12 @@ export class AdminBookRowComponent implements OnInit {
   }
 
   updateBook(book: CreateBookDTO) {
-    this._serviceProxy.updateBook(book).subscribe(() => {
+    this._serviceProxy.updateBook(book).subscribe((result) => {
       const modal = new mdb.Modal(
         document.getElementById(`editBook${this.book.bookId}Modal`)
       )
       modal.hide()
+      this.book = result
     })
   }
 
