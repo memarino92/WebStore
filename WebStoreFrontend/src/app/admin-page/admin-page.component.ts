@@ -42,6 +42,10 @@ export class AdminPageComponent {
   }
 
   createUser(data: CreateUserDTO) {
+    if (data.isAdmin === null) {
+      data.isAdmin = false
+    }
+
     this.serviceProxy.createUser(data).subscribe(() => {
       this.users$ = this.users$.pipe(map((users) => users))
     })
