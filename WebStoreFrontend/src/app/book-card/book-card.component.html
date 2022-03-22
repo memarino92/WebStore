@@ -10,6 +10,12 @@
     <h5 class="card-title">{{ book.title }}</h5>
     <h5 class="card-title">By {{ book.author }}</h5>
     <p class="card-text">Price: {{ book.price | currency }}</p>
-    <button class="btn" (click)="addBookToCart()">Add to Cart</button>
+    <button
+      *ngIf="(isAuthenticated$ | async)?.isAuthenticated"
+      class="btn"
+      (click)="addBookToCart()"
+    >
+      Add to Cart
+    </button>
   </div>
 </div>

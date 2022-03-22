@@ -36,11 +36,20 @@
     <p>Books</p>
   </a>
   <div class="flex items-center">
-    <a routerLink="/admin" *ngIf="isAuthenticated"
+    <a
+      routerLink="/admin"
+      *ngIf="
+        (isAuthenticated$ | async)?.isAuthenticated &&
+        (userData$ | async)?.userData.role === 'admin'
+      "
       ><button class="button me-3">Admin</button></a
     >
     <!-- Shopping Cart -->
-    <a class="text-reset me-3" routerLink="/cart">
+    <a
+      *ngIf="(isAuthenticated$ | async)?.isAuthenticated"
+      class="text-reset me-3"
+      routerLink="/cart"
+    >
       <i class="fas fa-shopping-cart"></i>
       <span
         *ngIf="cartItems$ | async"
@@ -77,7 +86,12 @@
       </ul>
     </div>
     <!-- User Menu or Login Button-->
-    <div *ngIf="!isAuthenticated; else userNameTemplate">
+    <div
+      *ngIf="
+        !(isAuthenticated$ | async)?.isAuthenticated;
+        else userNameTemplate
+      "
+    >
       <button (click)="authenticateWithPopup()">Log In</button>
     </div>
     <ng-template #userNameTemplate>

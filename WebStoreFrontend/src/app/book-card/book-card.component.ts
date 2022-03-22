@@ -7,9 +7,13 @@ import {
   BookDTO,
   CreateCartItemDTO,
 } from 'src/shared/service-proxies/service-proxies'
-import { OidcSecurityService } from 'angular-auth-oidc-client'
+import {
+  AuthenticatedResult,
+  OidcSecurityService,
+} from 'angular-auth-oidc-client'
 import { ServiceProxy } from 'src/shared/service-proxies/service-proxies'
 import { CartService } from '../cart.service'
+import { Observable } from 'rxjs'
 
 const FALLBACK_IMAGE_URL = `https://res.cloudinary.com/mmarino/image/upload/v1644550847/SimpleBook_h6isa6.svg`
 
@@ -20,6 +24,7 @@ const FALLBACK_IMAGE_URL = `https://res.cloudinary.com/mmarino/image/upload/v164
 })
 export class BookCardComponent implements OnInit {
   @Input() book!: BookDTO
+  isAuthenticated$: Observable<AuthenticatedResult>
 
   img!: CloudinaryImage
 
@@ -27,7 +32,9 @@ export class BookCardComponent implements OnInit {
     private oidcSecurityService: OidcSecurityService,
     private serviceProxy: ServiceProxy,
     private cartService: CartService
-  ) {}
+  ) {
+    this.isAuthenticated$ = oidcSecurityService.isAuthenticated$
+  }
 
   ngOnInit(): void {
     const bookImageUrl = this.book.imageUrl
@@ -41,10 +48,6 @@ export class BookCardComponent implements OnInit {
   }
 
   addBookToCart() {
-    // const username = this.oidcSecurityService.getUserData()?.preferred_username
-
-    // if (!username) return
-
     this.serviceProxy
       .addItemToCart(
         new CreateCartItemDTO({
