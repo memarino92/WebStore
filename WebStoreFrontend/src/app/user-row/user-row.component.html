@@ -2,7 +2,7 @@
 <td>{{ user.userName }}</td>
 <td>{{ user.email }}</td>
 <td>
-  <button data-mdb-toggle="modal" data-mdb-target="#updatePasswordModal">
+  <button data-mdb-toggle="modal" (click)="openUpdatePasswordModal()">
     Reset Password
   </button>
 </td>
@@ -10,7 +10,7 @@
 <!-- Update Password Modal -->
 <div
   class="modal fade"
-  id="updatePasswordModal"
+  id="updatePasswordForUser{{ user.userName }}Modal"
   tabindex="-1"
   aria-labelledby="exampleModalLabel"
   aria-hidden="true"
@@ -18,7 +18,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Create New Book</h5>
+        <h5 class="modal-title" id="exampleModalLabel">
+          Update Password for {{ user.userName }}
+        </h5>
         <button
           type="button"
           class="btn-close"

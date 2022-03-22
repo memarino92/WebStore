@@ -4,6 +4,7 @@ import {
   ServiceProxy,
   UpdateUserPasswordDTO,
 } from 'src/shared/service-proxies/service-proxies'
+import * as mdb from 'mdb-ui-kit' // lib
 
 @Component({
   // Using attribute selector for tr element is fine
@@ -26,5 +27,12 @@ export class UserRowComponent {
       password: this.newPassword,
     })
     this._serviceProxy.updateUserPassword(updateUserPasswordDTO).subscribe()
+  }
+
+  openUpdatePasswordModal() {
+    const modal = new mdb.Modal(
+      document.getElementById(`updatePasswordForUser${this.user.userName}Modal`)
+    )
+    modal.show()
   }
 }
