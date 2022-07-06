@@ -1,6 +1,6 @@
 # WebStore
 
-WebStore is a full-stack ecommerce application powering the business of a fictional bookstore. Its main purposes are to demonstrate my ability as a software engineer and to familiarize myself with the technologies that my employer uses.
+WebStore is a full-stack ecommerce application powering the business of a fictional bookstore. Its main purpose is to familiarize myself with an unfimiliar technology stack (Angular, ASP.NET, IdentityServer).
 
 ## Main Technologies
 
